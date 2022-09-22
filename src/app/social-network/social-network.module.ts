@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { SocialNetworkRoutingModule } from './social-network-routing.module';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
+import { SharedModule } from '../shared/shared.module';
+import { PostsService } from '../core/services/posts.service';
+// import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +16,12 @@ import { PostComponent } from './components/post/post.component';
   ],
   imports: [
     CommonModule,
-    SocialNetworkRoutingModule
+    SocialNetworkRoutingModule,
+    SharedModule,
+    // ReactiveFormsModule
+  ],
+  providers: [
+    PostsService
   ]
 })
 export class SocialNetworkModule { }

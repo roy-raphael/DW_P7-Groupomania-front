@@ -1,0 +1,17 @@
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+//   private token!: string;
+  private token: string = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbDZxdGlobjUwMDAwOXdtdXoyejBnb3FhIiwiaWF0IjoxNjYzODU1MjU3LCJleHAiOjE2NjM4OTg0NTcsImF1ZCI6Ikdyb3Vwb21hbmlhRW1wbG95ZWVzIiwiaXNzIjoiR3JvdXBvbWFuaWEiLCJzdWIiOiJ1c2VyMUBnbWFpbC5jb20ifQ.d-EkYih14txzlx1xyQN7ouMrb4fyRbZ2p6GsB66PNDLXQ3GTZtAB7cokR9qBRVMNK42cotJuUQZUa2Eh3c3R8Iz64xDgTWaFVBMzN-wjqCCiZCWXIsA6I7WO0P66308yXlmQzPsnXtPKlPSaQ_job2DzHYZLdHIteFZK0FGg2fX27y-IekK01RXMY7-zD1IyEFQs3ovyCXI00n9oFIhCwrTO_-mDLqDDx-0-fGi2neXLm73KsbgTlVPNUEdgd8zdZiqL4nizW2Ng0JRPdOILw_Puk4Jdt3hXxxe8iQyxYGY8vzc6KUL8v9RSurPwHXFhFTm8eWOP94gtdQ5JYhAVmk8dvVXngkGgB13u3ZCPpzLnmlS6gk6D7_1G_ZeqeQZr_Hjsh6h0hra8gjqQ0dLBHpPv33saphL5WYWg8AxtYEkUDUSBeICQ6HWRgQ0NQNQwMnqOzhAUJ3qcteIs_uJYNILO4UcY_CT7MODWRrp0o6Yq5CjnnaAbRmpSPm63x74FTswh8jhFiTsyhIDkkbmNGJM4iIIO1abLPK0FB_Y7HFzJltxnV8WyWbbauELrXN2vwlGxoUpeTNubHhGAU6lj1qiZi4QseM_OwL-cgPxAzUzd0UCArQ4CBM8xzLLlb-t5iCjZ4k8AvEsZOL6wOg2HgoXIyr1-fhDY8LZpM8GPmbk';
+
+  login() {
+    this.token = 'MyFakeToken';
+  }
+  
+  getToken(): string {
+    return this.token;
+  }
+}
