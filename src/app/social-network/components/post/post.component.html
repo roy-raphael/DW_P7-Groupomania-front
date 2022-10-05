@@ -1,16 +1,15 @@
-<p>post works!</p>
 <mat-card>
     <mat-card-header>
         <mat-card-title>
-            <span highlight>title | titlecase</span>
+            <span highlight>{{ post.authorId | titlecase }}</span>
         </mat-card-title>
         <mat-card-subtitle>
-            <span>createdDate | timeAgo</span>
+            <span>{{ post.createdAt | timeAgo }}</span>
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <img mat-card-image src="https://img.passeportsante.net/1200x675/2020-01-30/i93408-.webp" alt="title">
-        <span class="post-content">content | shorten: 100</span>
+        <img mat-card-image *ngIf="post.imageUrl as imageUrl" [src]="imageUrl" [alt]="post.text">
+        <span class="post-content">{{ post.text | shorten: 100 }}</span>
     </mat-card-content>
     <!-- <mat-card-actions>
         <app-comments [comments]="post.comments" (newComment)="onNewComment($event)"></app-comments>
