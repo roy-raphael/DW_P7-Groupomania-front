@@ -46,7 +46,8 @@ export class AuthService {
   }
   
   login(email: string, password: string): void {
-    const body: {email: string, password: string} = {email, password};
+    const refreshToken = this.getRefreshToken();
+    const body: {email: string, password: string, refreshToken?: string} = refreshToken ? {email, password, refreshToken} : {email, password};
     this.http.post<{userId: string, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/login`, body).pipe(
       take(1),
       tap(loginResponse => {
@@ -64,20 +65,24 @@ export class AuthService {
   }
 
   logOut(): void {
-    this.http.post<{}>(`${environment.apiUrl}/auth/logout`, {}).pipe(
-      take(1),
-      tap(() => {
-        this.resetTokens();
-      }),
-      catchError(error => {
-        console.log('Caught in logOut CatchError. Throwing error');
-        throw new Error(error);
-      })
-    ).subscribe();
+    const refreshToken = this.getRefreshToken();
+    this.resetTokens();
+    if (refreshToken) {
+      this.http.post<{}>(`${environment.apiUrl}/auth/logout`, {refreshToken}).pipe(
+        take(1),
+        tap(() => {
+          console.log('Successfully logged out of the backend');
+        }),
+        catchError(error => {
+          console.log('Caught in logOut CatchError. Throwing error');
+          throw new Error(error);
+        })
+      ).subscribe();
+    }
   }
   
-  refreshTokenObservable(): Observable<{userId: string, accessToken: string, refreshToken: string}> {
-    return this.http.post<{userId: string, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/refresh`, {});
+  refreshTokenObservable(token: string): Observable<{userId: string, accessToken: string, refreshToken: string}> {
+    return this.http.post<{userId: string, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/refresh`, {refreshToken: token});
   }
 
   // Getter / Setters
@@ -93,7 +98,7 @@ export class AuthService {
   getAccessToken(): string | null {
     var hasExpired = false;
     if (this.accessTokenExpirationTimestamp !== 0) {
-      hasExpired = this.accessTokenExpirationTimestamp > Date.now();
+      hasExpired = this.accessTokenExpirationTimestamp < Date.now();
     }
     return hasExpired ? null : localStorage.getItem("accessToken");
   }
@@ -106,7 +111,7 @@ export class AuthService {
   getRefreshToken(): string | null {
     var hasExpired = false;
     if (this.refreshTokenExpirationTimestamp !== 0) {
-      hasExpired = this.refreshTokenExpirationTimestamp > Date.now();
+      hasExpired = this.refreshTokenExpirationTimestamp < Date.now();
     }
     return hasExpired ? null : localStorage.getItem("refreshToken");
   }
