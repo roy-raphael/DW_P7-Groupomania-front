@@ -11,10 +11,8 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // console.log(req.url);
     const token = this.authService.getAccessToken();
     if (token === null) {
-      console.log("Token null : call refreshAndHandle");
       return this.refreshAndHandle(req, next);
     } else {
       const modifiedReq = this.addTokenHeader(req, token);
@@ -22,6 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
         catchError(error => {
           if (error instanceof HttpErrorResponse && error.status === 401) {
             this.logRequestError(<HttpErrorResponse>error, modifiedReq.url);
+            this.authService.deleteAccessToken();
             return this.refreshAndHandle(modifiedReq, next);
           }
           return throwError(() => error);
@@ -30,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
   }
 
-  private refreshAndHandle(request: HttpRequest<any>, next: HttpHandler) {
+  private refreshAndHandle(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.accessToken$.next(null);
@@ -73,7 +72,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  private addTokenHeader(request: HttpRequest<any>, token: string) {
+  private addTokenHeader(request: HttpRequest<any>, token: string): HttpRequest<any> {
     return request.clone({ headers: request.headers.set('Authorization', 'Bearer ' + token) });
   }
 
