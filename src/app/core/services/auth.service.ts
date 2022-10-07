@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, Observable, of, take, tap } from 'rxjs';
@@ -17,11 +17,15 @@ interface RefreshTokenJwtPayload extends JwtPayload {
   providedIn: 'root'
 })
 export class AuthService {
+  // Create a new Http Client from HttpBackend, which dispatches requests directly to the backend, without going through the interceptor chain
+  // So HTTP request done in this service won't be intercepted !
+  private http!: HttpClient;
   accessTokenExpirationTimestamp: number = 0;
   refreshTokenExpirationTimestamp: number = 0;
 
-  constructor(private http: HttpClient,
+  constructor(private handler: HttpBackend,
               private router: Router) {
+    this.http = new HttpClient(handler);
     const accessToken = this.getAccessToken();
     if (accessToken) this.updateAccessTokenExpiration(accessToken);
     const refreshToken = this.getRefreshToken();

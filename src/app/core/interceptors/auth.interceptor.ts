@@ -2,7 +2,6 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError  } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -13,12 +12,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // console.log(req.url);
-    if (req.url === `${environment.apiUrl}/auth/signup` || req.url === `${environment.apiUrl}/auth/login` || req.url === `${environment.apiUrl}/auth/logout` || req.url === `${environment.apiUrl}/auth/refresh`) {
-      // For auth routes : we don't want to add a token as authorization header, and we don't want to call the refresh route if this route fails 
-      return next.handle(req);
-    }
-
-    // Not Auth routes
     const token = this.authService.getAccessToken();
     if (token === null) {
       console.log("Token null : call refreshAndHandle");
