@@ -1,7 +1,7 @@
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, of, take, tap } from 'rxjs';
+import { catchError, Observable, take, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 
@@ -22,6 +22,8 @@ export class AuthService {
   private http!: HttpClient;
   accessTokenExpirationTimestamp: number = 0;
   refreshTokenExpirationTimestamp: number = 0;
+  currentRouteRequiringAuth: string = "";
+  redirectedToLogin: boolean = false;
 
   constructor(private handler: HttpBackend,
               private router: Router) {
@@ -58,6 +60,10 @@ export class AuthService {
         this.setUserId(loginResponse.userId);
         this.setAccessToken(loginResponse.accessToken);
         this.setRefreshToken(loginResponse.refreshToken);
+        if (this.redirectedToLogin && this.currentRouteRequiringAuth !== "") {
+          this.redirectedToLogin = false;
+          this.router.navigate([this.currentRouteRequiringAuth]);
+        }
       }),
       catchError(error => {
         this.resetTokens();
@@ -111,6 +117,11 @@ export class AuthService {
     window.localStorage.setItem("accessToken", token);
     this.updateAccessTokenExpiration(token);
   }
+  
+  deleteAccessToken(): void {
+    window.localStorage.removeItem("accessToken");
+    this.accessTokenExpirationTimestamp = 0;
+  }
 
   getRefreshToken(): string | null {
     var hasExpired = false;
@@ -162,6 +173,7 @@ export class AuthService {
   }
 
   redirectToLogin(): void {
+    this.redirectedToLogin = true;
     this.router.navigate(['login']);
   }
   
