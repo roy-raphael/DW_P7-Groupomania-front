@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Post } from 'src/app/core/models/post.model';
 
 @Component({
@@ -8,9 +8,17 @@ import { Post } from 'src/app/core/models/post.model';
 })
 export class PostComponent implements OnInit {
   @Input() post!: Post;
+  canEditAndDelete!: boolean;
 
   constructor() {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+  
+  ngOnChanges(changes: SimpleChanges) {
+    const newPost: Post = changes['post'].currentValue;
+    if (newPost != null) {
+      console.log(newPost);
+      this.canEditAndDelete = true;
+    }
   }
 }
