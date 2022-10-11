@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { map, Observable } from 'rxjs';
 import { Post } from 'src/app/core/models/post.model';
 import { PostsService } from 'src/app/core/services/posts.service';
 
@@ -11,9 +12,12 @@ import { PostsService } from 'src/app/core/services/posts.service';
 export class PostListComponent implements OnInit {
   posts$!: Observable<Post[]>;
 
-  constructor(private postsService: PostsService) { }
+  constructor(private route: ActivatedRoute,
+              private postsService: PostsService) { }
 
   ngOnInit(): void {
-    this.posts$ = this.postsService.getAllPosts();
+    this.posts$ = this.route.data.pipe(
+      map(data => data['posts'])
+    );
   }
 }

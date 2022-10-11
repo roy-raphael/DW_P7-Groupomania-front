@@ -6,6 +6,7 @@ import { PostListComponent } from './components/post-list/post-list.component';
 import { PostComponent } from './components/post/post.component';
 import { SharedModule } from '../shared/shared.module';
 import { PostsService } from '../core/services/posts.service';
+import { PostsResolver } from './resolvers/posts.resolver';
 // import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -21,7 +22,8 @@ import { PostsService } from '../core/services/posts.service';
     // ReactiveFormsModule
   ],
   providers: [
-    PostsService
+    PostsService,
+    PostsResolver
   ]
 })
 export class SocialNetworkModule { }
