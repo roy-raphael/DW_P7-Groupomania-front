@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="card-with-dots-button post-card">
     <mat-card-header>
         <mat-card-title>
             <span highlight>{{ post.authorId | titlecase }}</span>
@@ -6,7 +6,20 @@
         <mat-card-subtitle>
             <span>{{ post.createdAt | timeAgo }}</span>
         </mat-card-subtitle>
-    </mat-card-header>
+        <button mat-icon-button *ngIf="canEditAndDelete" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>Editer la publication</span>
+            </button>
+            <button mat-menu-item>
+            <mat-icon>delete</mat-icon>
+            <span>Supprimer la publication</span>
+            </button>
+        </mat-menu>
+    </mat-card-header>    
     <mat-card-content>
         <img mat-card-image *ngIf="post.imageUrl as imageUrl" [src]="imageUrl" [alt]="post.text">
         <span class="post-content">{{ post.text | shorten: 100 }}</span>

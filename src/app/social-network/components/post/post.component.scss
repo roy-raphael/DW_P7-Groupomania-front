@@ -1,0 +1,11 @@
+.post-card {
+    .mat-card-image {
+        margin-top: 0;
+    }
+}
+
+.card-with-dots-button {
+    mat-card-header {
+        justify-content: space-between;
+    }
+}
