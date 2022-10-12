@@ -39,6 +39,7 @@ export class AuthService {
     if (accessToken) this.updateAccessTokenExpiration(accessToken);
     const refreshToken = this.getRefreshToken();
     if (refreshToken) this.updateRefreshTokenExpiration(refreshToken);
+    this.retrieveUser();
   }
   
   // Methods relative to API endpoints
@@ -105,6 +106,12 @@ export class AuthService {
 
   // Getter / Setters
 
+  retrieveUser(): void {
+    const userString = window.localStorage.getItem("user");
+    if (userString == null) this.user = null;
+    else this.user = JSON.parse(userString) as User;
+  }
+
   getUser(): User | null {
     return this.user;
   }
@@ -112,6 +119,7 @@ export class AuthService {
   setUser(user: User): void {
     this.user = user;
     this.hasUserAdminRole = user.role === Role.Admin;
+    window.localStorage.setItem("user", JSON.stringify(user));
   }
   
   getAccessToken(): string | null {
