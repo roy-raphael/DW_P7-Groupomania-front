@@ -22,9 +22,11 @@
     </mat-card-header>    
     <mat-card-content>
         <img mat-card-image *ngIf="post.imageUrl as imageUrl" [src]="imageUrl" [alt]="post.imageAlt ? post.imageAlt : 'Image du post'">
+        <!-- use ngx-ellipsis to apply a text ellipsis (height defined in CSS), and to tell the component if it has been truncated -->
         <!-- use innerText attribute to display correctly special characters (like \n or \r) -->
-        <div class="post-content" [innerText]="shortenText ? (post.text | shorten: SHORTEN_TEXT_SIZE) : post.text"></div>
-        <span class="see-more-button" (click)="onSeeMoreButtonClicked()" *ngIf="shortenButton">{{ shortenText ? "Voir plus" : "Voir moins" }}</span>
+        <div #ellipsisRef ellipsis (ellipsis-change)="truncated($event)" [ngClass]="{ 'post-content': seeMoreButton }" [innerText]="post.text"></div>
+        <span class="see-more-button" *ngIf="seeMoreButton" (click)="showComplete()">Voir plus</span>
+        <span class="see-less-button" *ngIf="seeLessButton" (click)="showTruncated()">Voir moins</span>
     </mat-card-content>
     <!-- <mat-card-actions>
         <app-comments [comments]="post.comments" (newComment)="onNewComment($event)"></app-comments>

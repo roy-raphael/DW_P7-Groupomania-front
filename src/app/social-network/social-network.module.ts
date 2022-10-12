@@ -7,6 +7,7 @@ import { PostComponent } from './components/post/post.component';
 import { SharedModule } from '../shared/shared.module';
 import { PostsService } from '../core/services/posts.service';
 import { PostsResolver } from './resolvers/posts.resolver';
+import { EllipsisModule } from 'ngx-ellipsis';
 // import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -19,6 +20,7 @@ import { PostsResolver } from './resolvers/posts.resolver';
     CommonModule,
     SocialNetworkRoutingModule,
     SharedModule,
+    EllipsisModule,
     // ReactiveFormsModule
   ],
   providers: [

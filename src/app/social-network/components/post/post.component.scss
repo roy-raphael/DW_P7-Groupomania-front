@@ -10,10 +10,15 @@
     }
 }
 
-.see-more-button {
+.see-more-button, .see-less-button {
     font-weight: 500;
     &:hover {
         cursor: pointer;
         text-decoration: underline;
     }
+}
+
+.post-content {
+    // height for the post text ellipsis (ngx-ellipsis)
+    height: 6.5rem;
 }
