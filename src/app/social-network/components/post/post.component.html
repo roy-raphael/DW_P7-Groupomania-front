@@ -22,7 +22,8 @@
     </mat-card-header>    
     <mat-card-content>
         <img mat-card-image *ngIf="post.imageUrl as imageUrl" [src]="imageUrl" [alt]="post.text">
-        <div class="post-content">{{ shortenText ? (post.text | shorten: SHORTEN_TEXT_SIZE) : post.text }}</div>
+        <!-- use innerText attribute to display correctly special characters (like \n or \r) -->
+        <div class="post-content" [innerText]="shortenText ? (post.text | shorten: SHORTEN_TEXT_SIZE) : post.text"></div>
         <span class="see-more-button" (click)="onSeeMoreButtonClicked()" *ngIf="shortenButton">{{ shortenText ? "Voir plus" : "Voir moins" }}</span>
     </mat-card-content>
     <!-- <mat-card-actions>
