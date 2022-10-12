@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError  } from 'rxjs';
+import { User } from '../models/user.model';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
@@ -38,14 +39,15 @@ export class AuthInterceptor implements HttpInterceptor {
 
       if (token) {
         return this.authService.refreshTokenObservable(token).pipe(
-          switchMap((token: any) => {
+          switchMap((refreshResponse: {user: User, accessToken: string, refreshToken: string}) => {
             this.isRefreshing = false;
 
-            this.authService.setAccessToken(token.accessToken);
-            this.authService.setRefreshToken(token.refreshToken);
-            this.accessToken$.next(token.accessToken);
+            this.authService.setUser(refreshResponse.user);
+            this.authService.setAccessToken(refreshResponse.accessToken);
+            this.authService.setRefreshToken(refreshResponse.refreshToken);
+            this.accessToken$.next(refreshResponse.accessToken);
             
-            return next.handle(this.addTokenHeader(request, token.accessToken));
+            return next.handle(this.addTokenHeader(request, refreshResponse.accessToken));
           }),
           catchError((error) => {
             this.isRefreshing = false;
