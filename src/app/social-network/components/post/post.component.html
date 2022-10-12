@@ -5,6 +5,7 @@
         </mat-card-title>
         <mat-card-subtitle>
             <span>{{ post.createdAt | timeAgo }}</span>
+            <span *ngIf="hasBeenEdited"> (dernière modification : {{ post.updatedAt | timeAgo }})</span>
         </mat-card-subtitle>
         <button mat-icon-button *ngIf="canEditAndDelete" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>more_vert</mat-icon>

@@ -14,6 +14,7 @@ export class PostComponent implements OnInit {
   canEditAndDelete: boolean = false;
   seeMoreButton: boolean = true;
   seeLessButton: boolean = false;
+  hasBeenEdited: boolean = false;
 
   constructor(private authService: AuthService,
               private changeDetectorRef: ChangeDetectorRef) {}
@@ -25,6 +26,9 @@ export class PostComponent implements OnInit {
     if (newPost != null) {
       // console.log(newPost);
       this.canEditAndDelete = this.authService.isUserAdmin() || this.authService.isUserAuthor(newPost.authorId);
+      this.seeMoreButton = true;
+      this.seeLessButton = false;
+      this.hasBeenEdited = newPost.createdAt !== newPost.updatedAt;
     }
   }
 
