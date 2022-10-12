@@ -9,3 +9,11 @@
         justify-content: space-between;
     }
 }
+
+.see-more-button {
+    font-weight: 500;
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}

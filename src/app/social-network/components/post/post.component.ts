@@ -8,8 +8,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./post.component.scss']
 })
 export class PostComponent implements OnInit {
+  readonly SHORTEN_TEXT_SIZE: number = 100;
+
   @Input() post!: Post;
-  canEditAndDelete!: boolean;
+  canEditAndDelete: boolean = false;
+  shortenButton: boolean = false;
+  shortenText: boolean = true;
 
   constructor(private authService: AuthService) {}
 
@@ -20,6 +24,11 @@ export class PostComponent implements OnInit {
     if (newPost != null) {
       // console.log(newPost);
       this.canEditAndDelete = this.authService.isUserAdmin() || this.authService.isUserAuthor(newPost.authorId);
+      this.shortenButton = newPost.text.length > this.SHORTEN_TEXT_SIZE;
     }
+  }
+
+  onSeeMoreButtonClicked() {
+    this.shortenText = !this.shortenText;
   }
 }
