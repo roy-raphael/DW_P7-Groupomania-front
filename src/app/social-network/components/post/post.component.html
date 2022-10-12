@@ -1,7 +1,7 @@
 <mat-card class="card-with-dots-button post-card">
     <mat-card-header>
         <mat-card-title>
-            <span highlight>{{ { firstName: post.author.firstName, lastName: post.author.surName } | username }}</span>
+            <span highlight>{{ { firstName: post.author.firstName, lastName: post.author.surName, pseudo: post.author.pseudo } | username }}</span>
         </mat-card-title>
         <mat-card-subtitle>
             <span>{{ post.createdAt | timeAgo }}</span>
