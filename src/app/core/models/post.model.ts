@@ -7,6 +7,7 @@ export class Post {
     updatedAt!: Date;
     text!: string;
     imageUrl?: string;
+    imageAlt?: string;
     authorId!: string;
     author!: User;
     likes!: number;
