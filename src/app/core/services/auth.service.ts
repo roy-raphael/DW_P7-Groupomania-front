@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, Observable, take, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
+import { User } from '../models/user.model';
 
 interface AccessTokenJwtPayload extends JwtPayload {
   userId: string;
@@ -12,21 +13,27 @@ interface RefreshTokenJwtPayload extends JwtPayload {
   userId: string;
   refreshTokenId: string;
 }
+enum Role {
+  User = "USER",
+  Admin = "ADMIN"
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // Create a new Http Client from HttpBackend, which dispatches requests directly to the backend, without going through the interceptor chain
-  // So HTTP request done in this service won't be intercepted !
   private http!: HttpClient;
-  accessTokenExpirationTimestamp: number = 0;
-  refreshTokenExpirationTimestamp: number = 0;
+  private user: User | null = null;
+  private accessTokenExpirationTimestamp: number = 0;
+  private refreshTokenExpirationTimestamp: number = 0;
+  private redirectedToLogin: boolean = false;
+  private hasUserAdminRole = false;
   currentRouteRequiringAuth: string = "";
-  redirectedToLogin: boolean = false;
-
+  
   constructor(private handler: HttpBackend,
-              private router: Router) {
+    private router: Router) {
+    // Create a new Http Client from HttpBackend, which dispatches requests directly to the backend, without going through the interceptor chain
+    // So HTTP request done in this service won't be intercepted !
     this.http = new HttpClient(handler);
     const accessToken = this.getAccessToken();
     if (accessToken) this.updateAccessTokenExpiration(accessToken);
@@ -36,8 +43,9 @@ export class AuthService {
   
   // Methods relative to API endpoints
 
-  signup(email: string, password: string): void {
-    const body: {email: string, password: string} = {email, password};
+  signup(email: string, password: string, firstName: string, surName: string, pseudo: string): void {
+    var body: {email: string, password: string, firstName: string, surName: string, pseudo?: string} = {email, password, firstName, surName, pseudo};
+    if (pseudo === '') delete body.pseudo;
     this.http.post<{message: string}>(`${environment.apiUrl}/auth/signup`, body).pipe(
       take(1),
       tap(() => {
@@ -54,10 +62,10 @@ export class AuthService {
   login(email: string, password: string): void {
     const refreshToken = this.getRefreshToken();
     const body: {email: string, password: string, refreshToken?: string} = refreshToken ? {email, password, refreshToken} : {email, password};
-    this.http.post<{userId: string, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/login`, body).pipe(
+    this.http.post<{user: User, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/login`, body).pipe(
       take(1),
       tap(loginResponse => {
-        this.setUserId(loginResponse.userId);
+        this.setUser(loginResponse.user);
         this.setAccessToken(loginResponse.accessToken);
         this.setRefreshToken(loginResponse.refreshToken);
         if (this.redirectedToLogin && this.currentRouteRequiringAuth !== "") {
@@ -91,18 +99,19 @@ export class AuthService {
     }
   }
   
-  refreshTokenObservable(token: string): Observable<{userId: string, accessToken: string, refreshToken: string}> {
-    return this.http.post<{userId: string, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/refresh`, {refreshToken: token});
+  refreshTokenObservable(token: string): Observable<{user: User, accessToken: string, refreshToken: string}> {
+    return this.http.post<{user: User, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/refresh`, {refreshToken: token});
   }
 
   // Getter / Setters
-  
-  getUserId(): string | null {
-    return localStorage.getItem("userId");
+
+  getUser(): User | null {
+    return this.user;
   }
-  
-  setUserId(id: string): void {
-    window.localStorage.setItem("userId", id);
+
+  setUser(user: User): void {
+    this.user = user;
+    this.hasUserAdminRole = user.role === Role.Admin;
   }
   
   getAccessToken(): string | null {
@@ -136,7 +145,16 @@ export class AuthService {
     this.updateRefreshTokenExpiration(token);
   }
 
+  isUserAdmin(): boolean {
+    return this.hasUserAdminRole;
+  }
+
   // Other methods
+
+  isUserAuthor(authorId: string): boolean {
+    if (this.user == null) return false;
+    return authorId === this.user.id;
+  }
 
   updateAccessTokenExpiration(token: string): void {
     // Retrieve expiration time and store it
@@ -178,7 +196,8 @@ export class AuthService {
   }
   
   resetTokens(): void {
-    window.localStorage.removeItem("userId");
+    this.user = null;
+    this.hasUserAdminRole = false;
     window.localStorage.removeItem("accessToken");
     window.localStorage.removeItem("refreshToken");
     this.accessTokenExpirationTimestamp = 0;
