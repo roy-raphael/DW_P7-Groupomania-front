@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Comment } from '../models/comment.model';
 import { Post } from '../models/post.model';
 import { AuthService } from './auth.service';
 
@@ -19,10 +20,12 @@ export class PostsService {
     return this.http.get<Post>(`${environment.apiUrl}/posts/${postId}`);
   }
 
-  addNewComment(text: string, postId: string) {
+  addNewComment(text: string, postId: string): Observable<Comment> {
     const authorId = this.authService.getUserId();
     if (authorId) {
-      this.http.post<{text: string, authorId: string}>(`${environment.apiUrl}/posts/${postId}/comment`, {text, authorId}).subscribe();
+      return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comment`, {text, authorId});
+    } else {
+      return EMPTY;
     }
   }
 }

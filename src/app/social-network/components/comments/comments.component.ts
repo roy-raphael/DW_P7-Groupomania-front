@@ -82,13 +82,6 @@ export class CommentsComponent implements OnInit {
     if (this.commentCtrl.invalid) {
       return;
     }
-    // const maxId = Math.max(...this.comments.map(comment => comment.id));
-    // this.comments.unshift({
-    //   id: maxId + 1,
-    //   text: this.commentCtrl.value,
-    //   createdAt: new Date(),
-    //   userId: 1
-    // });
     this.newComment.emit(this.commentCtrl.value);
     this.commentCtrl.reset();
   }
