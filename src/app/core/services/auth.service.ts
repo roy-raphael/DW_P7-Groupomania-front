@@ -206,6 +206,10 @@ export class AuthService {
     this.redirectedToLogin = true;
     this.router.navigate(['login']);
   }
+
+  redirectTo404(): void {
+    this.router.navigate(['404'], {skipLocationChange:true});
+  }
   
   resetTokens(): void {
     this.user = null;

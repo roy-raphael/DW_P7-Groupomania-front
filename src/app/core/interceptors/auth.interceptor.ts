@@ -19,10 +19,14 @@ export class AuthInterceptor implements HttpInterceptor {
       const modifiedReq = this.addTokenHeader(req, token);
       return next.handle(modifiedReq).pipe(
         catchError(error => {
-          if (error instanceof HttpErrorResponse && error.status === 401) {
-            this.logRequestError(<HttpErrorResponse>error, modifiedReq.url);
-            this.authService.deleteAccessToken();
-            return this.refreshAndHandle(modifiedReq, next);
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 401) {
+              this.logRequestError(<HttpErrorResponse>error, modifiedReq.url);
+              this.authService.deleteAccessToken();
+              return this.refreshAndHandle(modifiedReq, next);
+            } else if (error.status === 404) {
+              this.authService.redirectTo404();
+            }
           }
           return throwError(() => error);
         })

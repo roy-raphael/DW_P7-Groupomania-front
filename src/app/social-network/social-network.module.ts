@@ -11,6 +11,7 @@ import { EllipsisModule } from 'ngx-ellipsis';
 // import { ReactiveFormsModule } from '@angular/forms';
 import { PostUnitaryComponent } from './components/post-unitary/post-unitary.component';
 import { PostResolver } from './resolvers/post.resolver';
+import { PageNotFoundModule } from '../page-not-found/page-not-found.module';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { PostResolver } from './resolvers/post.resolver';
     SocialNetworkRoutingModule,
     SharedModule,
     EllipsisModule,
+    PageNotFoundModule,
     // ReactiveFormsModule
   ],
   providers: [

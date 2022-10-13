@@ -16,9 +16,6 @@ export class PostResolver implements Resolve<Post> {
       return this.postsService.getOnePost(<string>postId).pipe(
         catchError(err => {
           console.log("Error during PostResolver : " + err.status + " - " + err.error.error.message);
-          if (err.status === 404) {
-            this.router.navigate(['login'], {skipLocationChange:true});
-          }
           return EMPTY;
         })
       );
