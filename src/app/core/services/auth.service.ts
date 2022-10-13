@@ -159,6 +159,14 @@ export class AuthService {
 
   // Other methods
 
+  getUserId(): string | null {
+    const user = this.getUser();
+    if (!user) return null;
+    const userId = user.id;
+    if (!userId) return null;
+    return userId;
+  }
+
   isUserAuthor(authorId: string): boolean {
     if (this.user == null) return false;
     return authorId === this.user.id;

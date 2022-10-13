@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Post } from 'src/app/core/models/post.model';
 import { EllipsisDirective } from 'ngx-ellipsis';
 
@@ -11,6 +11,7 @@ import { EllipsisDirective } from 'ngx-ellipsis';
 export class PostComponent implements OnInit {
   @ViewChild(EllipsisDirective) ellipsisRef!: EllipsisDirective; // aim : tell the directive (from the template) to update
   @Input() post!: Post;
+  @Output() postCommented = new EventEmitter<{ comment: string, postId: string }>();
   hasBeenEdited: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
@@ -51,5 +52,9 @@ export class PostComponent implements OnInit {
       this.cdr.detectChanges();
       this.ellipsisRef.applyEllipsis();
     }
+  }
+
+  onNewComment(comment: string) {
+    this.postCommented.emit({ comment, postId: this.post.id });
   }
 }

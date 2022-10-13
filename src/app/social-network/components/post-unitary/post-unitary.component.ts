@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
 import { Post } from 'src/app/core/models/post.model';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { PostsService } from 'src/app/core/services/posts.service';
 
 @Component({
   selector: 'app-post-unitary',
@@ -13,7 +14,8 @@ export class PostUnitaryComponent implements OnInit {
   post$!: Observable<Post>;
 
   constructor(private route: ActivatedRoute,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private postsService: PostsService) { }
 
   ngOnInit(): void {
     this.post$ = this.route.data.pipe(
@@ -21,4 +23,7 @@ export class PostUnitaryComponent implements OnInit {
     );
   }
 
+  onPostCommented(postCommented: { comment: string, postId: string }) {
+    this.postsService.addNewComment(postCommented.comment, postCommented.postId);
+  }
 }

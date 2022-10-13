@@ -22,4 +22,8 @@ export class PostListComponent implements OnInit {
       map(data => data['posts'].map((post: Post) => ({canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId), ...post})))
     );
   }
+
+  onPostCommented(postCommented: { comment: string, postId: string }) {
+    this.postsService.addNewComment(postCommented.comment, postCommented.postId);
+  }
 }
