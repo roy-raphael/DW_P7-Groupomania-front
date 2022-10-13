@@ -13,4 +13,5 @@ export class Post {
     likes!: number;
     dislikes!: number;
     comments!: Comment[];
+    canEditAndDelete?: boolean;
 }

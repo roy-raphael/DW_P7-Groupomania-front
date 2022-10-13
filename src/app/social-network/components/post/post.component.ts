@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Post } from 'src/app/core/models/post.model';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { EllipsisDirective } from 'ngx-ellipsis';
 
 @Component({
@@ -12,13 +11,11 @@ import { EllipsisDirective } from 'ngx-ellipsis';
 export class PostComponent implements OnInit {
   @ViewChild(EllipsisDirective) ellipsisRef!: EllipsisDirective; // aim : tell the directive (from the template) to update
   @Input() post!: Post;
-  canEditAndDelete: boolean = false;
   hasBeenEdited: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
 
-  constructor(private authService: AuthService,
-              private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     // Calling detectChanges here is the workaround for not having the error "ExpressionChangedAfterItHasBeenCheckedError" (for seeMoreButton)
@@ -29,7 +26,6 @@ export class PostComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     const newPost: Post = changes['post'].currentValue;
     if (newPost != null) {
-      this.canEditAndDelete = this.authService.isUserAdmin() || this.authService.isUserAuthor(newPost.authorId);
       this.hasBeenEdited = newPost.createdAt !== newPost.updatedAt;
     }
   }

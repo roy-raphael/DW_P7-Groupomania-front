@@ -164,6 +164,10 @@ export class AuthService {
     return authorId === this.user.id;
   }
 
+  canEditAndDeletePost(postAuthorId: string): boolean {
+    return this.isUserAdmin() || this.isUserAuthor(postAuthorId)
+  }
+
   updateAccessTokenExpiration(token: string): void {
     // Retrieve expiration time and store it
     const decodedPayload = jwt_decode<AccessTokenJwtPayload>(token);
