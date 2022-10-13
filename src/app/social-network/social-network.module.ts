@@ -9,12 +9,15 @@ import { PostsService } from '../core/services/posts.service';
 import { PostsResolver } from './resolvers/posts.resolver';
 import { EllipsisModule } from 'ngx-ellipsis';
 // import { ReactiveFormsModule } from '@angular/forms';
+import { PostUnitaryComponent } from './components/post-unitary/post-unitary.component';
+import { PostResolver } from './resolvers/post.resolver';
 
 
 @NgModule({
   declarations: [
     PostListComponent,
-    PostComponent
+    PostComponent,
+    PostUnitaryComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +28,8 @@ import { EllipsisModule } from 'ngx-ellipsis';
   ],
   providers: [
     PostsService,
-    PostsResolver
+    PostsResolver,
+    PostResolver
   ]
 })
 export class SocialNetworkModule { }
