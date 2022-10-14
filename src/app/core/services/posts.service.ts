@@ -6,14 +6,24 @@ import { Comment } from '../models/comment.model';
 import { Post } from '../models/post.model';
 import { AuthService } from './auth.service';
 
+const GET_POSTS_LIMIT : number = 10;
+
 @Injectable()
 export class PostsService {
 
   constructor(private http: HttpClient,
               private authService: AuthService) {}
 
+  getPostsLimit(): number {
+    return GET_POSTS_LIMIT;
+  }
+
   getAllPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(`${environment.apiUrl}/posts`);
+  }
+
+  getSomePosts(before?: Date): Observable<Post[]> {
+    return this.http.get<Post[]>(`${environment.apiUrl}/posts?limit=${GET_POSTS_LIMIT}${before ? "&before=" + before : ""}`);
   }
 
   getOnePost(postId: string): Observable<Post> {

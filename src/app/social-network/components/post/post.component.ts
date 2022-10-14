@@ -34,6 +34,7 @@ export class PostComponent implements OnInit {
     this.newCommentSubscription = this.newComment$.subscribe((comment: Comment) => {
       if (comment.postId === this.post.id) {
         this.post.comments.push(comment);
+        this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });
     this.postLikeUpdateSubscription = this.postLikeUpdate$.subscribe((post: Post) => {
@@ -41,6 +42,7 @@ export class PostComponent implements OnInit {
         this.post.likes = post.likes;
         this.post.likesNumber = post.likesNumber;
         this.post.userLiked = post.userLiked;
+        this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });
   }
