@@ -1,1 +1,1 @@
-<app-post *ngIf="post$ | async as post" [post]="post" (postCommented)="onPostCommented($event)" [newComment$]="newCommentSubject.asObservable()"></app-post>
+<app-post *ngIf="post$ | async as post" [post]="post" (postCommented)="onPostCommented($event)" (postLiked)="onPostLiked($event)" [newComment$]="newCommentSubject.asObservable()" [postLikeUpdate$]="postLikeUpdateSubject.asObservable()"></app-post>

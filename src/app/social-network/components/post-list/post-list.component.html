@@ -1,2 +1,2 @@
 <p>post-list works!</p>
-<app-post *ngFor="let post of posts$ | async" [post]="post" (postCommented)="onPostCommented($event)" [newComment$]="newCommentSubject.asObservable()"></app-post>
+<app-post *ngFor="let post of posts$ | async" [post]="post" (postCommented)="onPostCommented($event)" (postLiked)="onPostLiked($event)" [newComment$]="newCommentSubject.asObservable()" [postLikeUpdate$]="postLikeUpdateSubject.asObservable()"></app-post>

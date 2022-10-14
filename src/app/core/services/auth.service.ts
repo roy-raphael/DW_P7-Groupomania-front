@@ -172,6 +172,14 @@ export class AuthService {
     return authorId === this.user.id;
   }
 
+  containsCurrentUser(userArray: {id: string}[]): boolean {
+    if (this.user == null) return false;
+    for (let user of userArray) {
+      if (user.id === this.user.id) return true;
+    }
+    return false;
+  }
+
   canEditAndDeletePost(postAuthorId: string): boolean {
     return this.isUserAdmin() || this.isUserAuthor(postAuthorId)
   }

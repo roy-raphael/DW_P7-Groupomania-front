@@ -10,8 +10,9 @@ export class Post {
     imageAlt?: string;
     authorId!: string;
     author!: User;
-    likes!: number;
-    dislikes!: number;
+    likes!: {id: string}[];
+    likesNumber?: number;
+    userLiked?: boolean;
     comments!: Comment[];
     canEditAndDelete?: boolean;
 }

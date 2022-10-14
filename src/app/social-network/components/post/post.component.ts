@@ -14,8 +14,11 @@ export class PostComponent implements OnInit {
   @ViewChild(EllipsisDirective) ellipsisRef!: EllipsisDirective; // aim : tell the directive (from the template) to update
   @Input() post!: Post;
   @Input() newComment$!: Observable<Comment>;
+  @Input() postLikeUpdate$!: Observable<Post>;
   @Output() postCommented = new EventEmitter<{ comment: string, postId: string }>();
+  @Output() postLiked = new EventEmitter<{ like: boolean, postId: string }>();
   private newCommentSubscription!: Subscription;
+  private postLikeUpdateSubscription!: Subscription;
   hasBeenEdited: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
@@ -29,6 +32,13 @@ export class PostComponent implements OnInit {
     this.newCommentSubscription = this.newComment$.subscribe((comment: Comment) => {
       if (comment.postId === this.post.id) {
         this.post.comments.push(comment);
+      }
+    });
+    this.postLikeUpdateSubscription = this.postLikeUpdate$.subscribe((post: Post) => {
+      if (post.id === this.post.id) {
+        this.post.likes = post.likes;
+        this.post.likesNumber = post.likesNumber;
+        this.post.userLiked = post.userLiked;
       }
     });
   }
@@ -45,6 +55,7 @@ export class PostComponent implements OnInit {
 
   ngOnDestroy() {
     this.newCommentSubscription.unsubscribe();
+    this.postLikeUpdateSubscription.unsubscribe();
   }
 
   // Saves if the text has been truncated or not
@@ -72,5 +83,9 @@ export class PostComponent implements OnInit {
 
   onNewComment(comment: string) {
     this.postCommented.emit({ comment, postId: this.post.id });
+  }
+
+  onLike() {
+    this.postLiked.emit({ like: !this.post.userLiked, postId: this.post.id });
   }
 }

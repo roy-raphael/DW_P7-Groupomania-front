@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, tap } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Comment } from '../models/comment.model';
 import { Post } from '../models/post.model';
@@ -24,6 +24,16 @@ export class PostsService {
     const authorId = this.authService.getUserId();
     if (authorId) {
       return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comment`, {text, authorId});
+    } else {
+      return EMPTY;
+    }
+  }
+
+  likePost(postLiked: boolean, postId: string): Observable<Post> {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      const like = Number(postLiked);
+      return this.http.post<Post>(`${environment.apiUrl}/posts/${postId}/like`, {userId, like});
     } else {
       return EMPTY;
     }

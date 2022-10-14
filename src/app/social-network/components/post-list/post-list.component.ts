@@ -14,6 +14,7 @@ import { PostsService } from 'src/app/core/services/posts.service';
 export class PostListComponent implements OnInit {
   posts$!: Observable<Post[]>;
   private _newCommentSubject: Subject<Comment> = new Subject();
+  private _postLikeUpdateSubject: Subject<Post> = new Subject();
 
   constructor(private route: ActivatedRoute,
               private authService: AuthService,
@@ -21,7 +22,12 @@ export class PostListComponent implements OnInit {
 
   ngOnInit(): void {
     this.posts$ = this.route.data.pipe(
-      map(data => data['posts'].map((post: Post) => ({canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId), ...post})))
+      map(data => data['posts'].map((post: Post) => ({
+        likesNumber: post.likes.length,
+        userLiked: this.authService.containsCurrentUser(post.likes),
+        canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
+        ...post
+      })))
     );
   }
 
@@ -29,9 +35,24 @@ export class PostListComponent implements OnInit {
     return this._newCommentSubject;
   }
 
+  get postLikeUpdateSubject() {
+    return this._postLikeUpdateSubject;
+  }
+
   onPostCommented(postCommented: { comment: string, postId: string }) {
     this.postsService.addNewComment(postCommented.comment, postCommented.postId).pipe(
       map((comment: Comment) => this._newCommentSubject.next(comment))
+    ).subscribe();
+  }
+
+  onPostLiked(postLiked: { like: boolean, postId: string }) {
+    this.postsService.likePost(postLiked.like, postLiked.postId).pipe(
+      // map((post: Post) => this._postLikeUpdateSubject.next(post))
+      map(post => this._postLikeUpdateSubject.next({
+        likesNumber: post.likes.length,
+        userLiked: this.authService.containsCurrentUser(post.likes),
+        canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
+        ...post}))
     ).subscribe();
   }
 }

@@ -30,6 +30,15 @@
         <span class="see-less-button" *ngIf="seeMore" (click)="showTruncated()">Voir moins</span>
     </mat-card-content>
     <mat-card-actions>
+        <div class="actions-bar">
+            <button class="comments-button" mat-flat-button>{{post.comments.length + " commentaires"}}</button>
+            <div class="likes">
+                <p>{{post.likesNumber ? post.likesNumber : 0}}</p>
+                <button class="like-button" mat-icon-button (click)="onLike()" [attr.aria-label]="post.userLiked ? 'Button to unlike the post' : 'Button to like the post'">
+                    <mat-icon color="primary" [ngClass]="{ 'material-icons-outlined': !post.userLiked }">thumb_up</mat-icon>
+                </button>
+            </div>
+        </div>
         <app-comments [comments]="post.comments" (newComment)="onNewComment($event)"></app-comments>
     </mat-card-actions>
 </mat-card>
