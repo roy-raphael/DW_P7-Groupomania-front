@@ -48,4 +48,13 @@ export class PostsService {
       return EMPTY;
     }
   }
+
+  completePostInfos(post: Post): Post {
+    return {
+      likesNumber: post.likes.length,
+      userLiked: this.authService.containsCurrentUser(post.likes),
+      canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
+      ...post
+    };
+  }
 }

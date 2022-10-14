@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { map, Observable, Subject } from 'rxjs';
 import { Comment } from 'src/app/core/models/comment.model';
 import { Post } from 'src/app/core/models/post.model';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { PostsService } from 'src/app/core/services/posts.service';
 
 @Component({
@@ -17,15 +16,12 @@ export class PostUnitaryComponent implements OnInit {
   private _postLikeUpdateSubject: Subject<Post> = new Subject();
 
   constructor(private route: ActivatedRoute,
-              private authService: AuthService,
               private postsService: PostsService) {}
 
   ngOnInit(): void {
     this.post$ = this.route.data.pipe(
-      map(data => ({likesNumber: data['post'].likes.length,
-                    userLiked: this.authService.containsCurrentUser(data['post'].likes),
-                    canEditAndDelete: this.authService.canEditAndDeletePost(data['post'].authorId),
-                    ...data['post']}))
+      map(data => data['post']),
+      map((post: Post) => this.postsService.completePostInfos(post))
     );
   }
 
@@ -45,11 +41,7 @@ export class PostUnitaryComponent implements OnInit {
 
   onPostLiked(postLiked: { like: boolean, postId: string }) {
     this.postsService.likePost(postLiked.like, postLiked.postId).pipe(
-      map(post => this._postLikeUpdateSubject.next({
-        likesNumber: post.likes.length,
-        userLiked: this.authService.containsCurrentUser(post.likes),
-        canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
-        ...post}))
+      map(post => this._postLikeUpdateSubject.next(this.postsService.completePostInfos(post)))
     ).subscribe();
   }
 }

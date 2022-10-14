@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { map, Observable, Subject, take, tap } from 'rxjs';
 import { Comment } from 'src/app/core/models/comment.model';
 import { Post } from 'src/app/core/models/post.model';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { PostsService } from 'src/app/core/services/posts.service';
 
 @Component({
@@ -23,7 +22,6 @@ export class PostListComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private cdr: ChangeDetectorRef,
-              private authService: AuthService,
               private postsService: PostsService) { }
 
   ngOnInit(): void {}
@@ -32,12 +30,6 @@ export class PostListComponent implements OnInit {
     this.route.data.pipe(
       map(data => data['posts']),
       take(1),
-      map(posts => posts.map((post: Post) => ({
-        likesNumber: post.likes.length,
-        userLiked: this.authService.containsCurrentUser(post.likes),
-        canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
-        ...post
-      }))),
       tap((posts: Post[]) => this.onNewPosts(posts))
     ).subscribe();
   }
@@ -53,19 +45,13 @@ export class PostListComponent implements OnInit {
   loadMore() {
     this.postsService.getSomePosts(this._lastPostDate).pipe(
       take(1),
-      map((posts: Post[]) => posts.map((post: Post) => ({
-        likesNumber: post.likes.length,
-        userLiked: this.authService.containsCurrentUser(post.likes),
-        canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
-        ...post
-      }))),
       tap((posts: Post[]) => this.onNewPosts(posts))
     ).subscribe();
   }
 
   onNewPosts(posts: Post[]): void {
     if (posts.length > 0) {
-      posts.forEach(post => this.postsList.push(post));
+      posts.map((post: Post) => this.postsService.completePostInfos(post)).forEach(post => this.postsList.push(post));
       const lastPost = [...posts].pop();
       if (lastPost) {
         this._lastPostDate = lastPost.createdAt;
@@ -79,19 +65,15 @@ export class PostListComponent implements OnInit {
     }
   }
 
-  onPostCommented(postCommented: { comment: string, postId: string }) {
-    this.postsService.addNewComment(postCommented.comment, postCommented.postId).pipe(
-      map((comment: Comment) => this._newCommentSubject.next(comment))
+  onPostLiked(postLiked: { like: boolean, postId: string }) {
+    this.postsService.likePost(postLiked.like, postLiked.postId).pipe(
+      map(post => this._postLikeUpdateSubject.next(this.postsService.completePostInfos(post)))
     ).subscribe();
   }
 
-  onPostLiked(postLiked: { like: boolean, postId: string }) {
-    this.postsService.likePost(postLiked.like, postLiked.postId).pipe(
-      map(post => this._postLikeUpdateSubject.next({
-        likesNumber: post.likes.length,
-        userLiked: this.authService.containsCurrentUser(post.likes),
-        canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
-        ...post}))
+  onPostCommented(postCommented: { comment: string, postId: string }) {
+    this.postsService.addNewComment(postCommented.comment, postCommented.postId).pipe(
+      map((comment: Comment) => this._newCommentSubject.next(comment))
     ).subscribe();
   }
 }
