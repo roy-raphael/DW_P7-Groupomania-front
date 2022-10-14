@@ -20,6 +20,8 @@ export class PostComponent implements OnInit {
   private newCommentSubscription!: Subscription;
   private postLikeUpdateSubscription!: Subscription;
   hasBeenEdited: boolean = false;
+  hasSomeComment: boolean = false;
+  hasSeveralComments: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
 
@@ -49,6 +51,9 @@ export class PostComponent implements OnInit {
       const newPost: Post = postChanges.currentValue;
       if (newPost != null) {
         this.hasBeenEdited = newPost.createdAt !== newPost.updatedAt;
+        const commentsNumber = newPost.comments.length;
+        this.hasSomeComment = commentsNumber ? (commentsNumber !== 0) : false;
+        this.hasSeveralComments = commentsNumber ? (commentsNumber > 1) : false;
       }
     }
   }

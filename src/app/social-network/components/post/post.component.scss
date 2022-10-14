@@ -1,3 +1,6 @@
+@use '@angular/material' as mat;
+@import "src/_material-theme.scss";
+
 .post-card {
     .mat-card-image {
         margin-top: 0;
@@ -21,4 +24,25 @@
 .post-content {
     // height for the post text ellipsis (ngx-ellipsis)
     max-height: 6.5rem;
+}
+
+.actions-bar {
+    display: flex;
+    align-items: baseline;
+}
+
+.comments-button {
+    font-weight: 600;
+    color: mat.get-color-from-palette($groupomania-front-primary, default);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.likes {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    align-items: baseline;
 }
