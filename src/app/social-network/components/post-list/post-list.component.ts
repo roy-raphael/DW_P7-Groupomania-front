@@ -43,7 +43,7 @@ export class PostListComponent implements OnInit {
   }
 
   loadMore() {
-    this.postsService.getSomePosts(this._lastPostDate).pipe(
+    this.postsService.getPosts(this._lastPostDate).pipe(
       take(1),
       tap((posts: Post[]) => this.onNewPosts(posts))
     ).subscribe();

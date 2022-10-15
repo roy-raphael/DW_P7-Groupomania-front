@@ -18,11 +18,7 @@ export class PostsService {
     return GET_POSTS_LIMIT;
   }
 
-  getAllPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(`${environment.apiUrl}/posts`);
-  }
-
-  getSomePosts(before?: Date): Observable<Post[]> {
+  getPosts(before?: Date): Observable<Post[]> {
     return this.http.get<Post[]>(`${environment.apiUrl}/posts?limit=${GET_POSTS_LIMIT}${before ? "&before=" + before : ""}`);
   }
 

@@ -9,6 +9,6 @@ export class PostsResolver implements Resolve<Post[]> {
   constructor(private postsService: PostsService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Post[]> {
-    return this.postsService.getSomePosts();
+    return this.postsService.getPosts();
   }
 }
