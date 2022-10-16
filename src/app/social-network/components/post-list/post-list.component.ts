@@ -12,11 +12,10 @@ import { PostsService } from 'src/app/core/services/posts.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostListComponent implements OnInit {
-  posts$!: Observable<Post[]>;
   postsList: Post[] = [];
-  postsSubject$: Subject<Post[]> = new Subject<Post[]>();
   private _newCommentSubject: Subject<Comment> = new Subject();
   private _postLikeUpdateSubject: Subject<Post> = new Subject();
+  private _noMoreCommentToLoadSubject: Subject<string> = new Subject();
   private _lastPostDate!: Date;
   noMorePostToLoad: boolean = false;
 
@@ -42,6 +41,10 @@ export class PostListComponent implements OnInit {
     return this._postLikeUpdateSubject;
   }
 
+  get noMoreCommentToLoadSubject() {
+    return this._noMoreCommentToLoadSubject;
+  }
+
   loadMore() {
     this.postsService.getPosts(this._lastPostDate).pipe(
       take(1),
@@ -56,8 +59,7 @@ export class PostListComponent implements OnInit {
       if (lastPost) {
         this._lastPostDate = lastPost.createdAt;
       }
-      this.postsSubject$.next(this.postsList);
-      this.cdr.detectChanges();
+      this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
     }
     if (!this.noMorePostToLoad && posts.length < this.postsService.getPostsLimit()) {
       this.noMorePostToLoad = true;
@@ -74,6 +76,25 @@ export class PostListComponent implements OnInit {
   onPostCommented(postCommented: { comment: string, postId: string }) {
     this.postsService.addNewComment(postCommented.comment, postCommented.postId).pipe(
       map((comment: Comment) => this._newCommentSubject.next(comment))
+    ).subscribe();
+  }
+
+  onLoadComments(params: { before?: Date, postId: string }) {
+    this.postsService.getComments(params.postId, params.before).pipe(
+      tap((comments: Comment[]) => {
+        const postIndex = this.postsList.findIndex(post => post.id === params.postId);
+        if (postIndex !== -1) {
+          if (comments.length > 0) {
+            this.postsList[postIndex].comments.push(...comments);
+            this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
+            if (this.postsList[postIndex].comments.length >= this.postsList[postIndex]._count.comments) {
+              this._noMoreCommentToLoadSubject.next(params.postId);
+            }
+          }
+        } else {
+          console.error("Error during PostListComponent:onLoadComments : no post found in the list with ID " + params.postId);
+        }
+      })
     ).subscribe();
   }
 }

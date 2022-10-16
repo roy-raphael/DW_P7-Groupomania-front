@@ -15,15 +15,19 @@ export class PostComponent implements OnInit {
   @Input() post!: Post;
   @Input() newComment$!: Observable<Comment>;
   @Input() postLikeUpdate$!: Observable<Post>;
+  @Input() noMoreCommentToLoad$!: Observable<string>;
   @Output() postCommented = new EventEmitter<{ comment: string, postId: string }>();
   @Output() postLiked = new EventEmitter<{ like: boolean, postId: string }>();
+  @Output() loadComments = new EventEmitter<{ before?: Date, postId: string }>();
   private newCommentSubscription!: Subscription;
   private postLikeUpdateSubscription!: Subscription;
+  private noMoreCommentToLoadSubscription!: Subscription;
   hasBeenEdited: boolean = false;
   hasSomeComment: boolean = false;
   hasSeveralComments: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
+  noMoreCommentToLoad: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -45,6 +49,12 @@ export class PostComponent implements OnInit {
         this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });
+    this.noMoreCommentToLoadSubscription = this.noMoreCommentToLoad$.subscribe((postId: string) => {
+      if (postId === this.post.id) {
+        this.noMoreCommentToLoad = true;
+        this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
+      }
+    });
   }
   
   ngOnChanges(changes: SimpleChanges) {
@@ -53,9 +63,10 @@ export class PostComponent implements OnInit {
       const newPost: Post = postChanges.currentValue;
       if (newPost != null) {
         this.hasBeenEdited = newPost.createdAt !== newPost.updatedAt;
-        const commentsNumber = newPost.comments.length;
+        const commentsNumber = newPost._count.comments;
         this.hasSomeComment = commentsNumber ? (commentsNumber !== 0) : false;
         this.hasSeveralComments = commentsNumber ? (commentsNumber > 1) : false;
+        this.noMoreCommentToLoad = this.post.comments.length >= commentsNumber;
       }
     }
   }
@@ -63,6 +74,7 @@ export class PostComponent implements OnInit {
   ngOnDestroy() {
     this.newCommentSubscription.unsubscribe();
     this.postLikeUpdateSubscription.unsubscribe();
+    this.noMoreCommentToLoadSubscription.unsubscribe();
   }
 
   // Saves if the text has been truncated or not
@@ -94,5 +106,10 @@ export class PostComponent implements OnInit {
 
   onLike() {
     this.postLiked.emit({ like: !this.post.userLiked, postId: this.post.id });
+  }
+
+  onloadMoreComments() {
+    const lastComment : Comment = this.post.comments[this.post.comments.length - 1];
+    this.loadComments.emit({ before: lastComment ? lastComment.createdAt : undefined, postId: this.post.id });
   }
 }

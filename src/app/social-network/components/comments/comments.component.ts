@@ -1,6 +1,7 @@
 import { animate, animateChild, group, query, sequence, stagger, state, style, transition, trigger, useAnimation } from '@angular/animations';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { flashAnimation } from 'src/app/shared/animations/flash.animation';
 import { slideAndFadeAnimation } from 'src/app/shared/animations/slide-and-fade.animation';
 import { Comment } from '../../../core/models/comment.model';
@@ -63,7 +64,9 @@ import { Comment } from '../../../core/models/comment.model';
 export class CommentsComponent implements OnInit {
 
   @Input() comments!: Comment[];
+  @Input() noMoreCommentToLoad!: boolean;
   @Output() newComment = new EventEmitter<string>();
+  @Output() loadMoreComments = new EventEmitter<void>();
 
   commentCtrl!: FormControl;
   animationStates: { [key: number]: 'default' | 'active' } = {};
@@ -92,5 +95,9 @@ export class CommentsComponent implements OnInit {
 
   onListItemMouseLeave(index: number) {
     this.animationStates[index] = 'default';
+  }
+
+  loadMore() {
+    this.loadMoreComments.emit();
   }
 }

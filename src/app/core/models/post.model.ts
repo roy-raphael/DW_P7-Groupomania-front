@@ -14,5 +14,6 @@ export class Post {
     likesNumber?: number;
     userLiked?: boolean;
     comments!: Comment[];
+    _count!: {comments: number};
     canEditAndDelete?: boolean;
 }

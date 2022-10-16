@@ -1,2 +1,8 @@
-<app-post *ngFor="let post of postsSubject$ | async" [post]="post" (postCommented)="onPostCommented($event)" (postLiked)="onPostLiked($event)" [newComment$]="newCommentSubject.asObservable()" [postLikeUpdate$]="postLikeUpdateSubject.asObservable()"></app-post>
+<app-post *ngFor="let post of postsList" [post]="post"
+    (postCommented)="onPostCommented($event)"
+    (postLiked)="onPostLiked($event)"
+    (loadComments)="onLoadComments($event)"
+    [newComment$]="newCommentSubject.asObservable()"
+    [postLikeUpdate$]="postLikeUpdateSubject.asObservable()"
+    [noMoreCommentToLoad$]="noMoreCommentToLoadSubject.asObservable()"></app-post>
 <button class="load-more-button" *ngIf="!noMorePostToLoad" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more posts">+ Afficher plus</button>

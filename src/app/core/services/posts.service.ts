@@ -6,7 +6,10 @@ import { Comment } from '../models/comment.model';
 import { Post } from '../models/post.model';
 import { AuthService } from './auth.service';
 
-const GET_POSTS_LIMIT : number = 10;
+const GET_POSTS_LIMIT: number = 10;
+const GET_POSTS_COMMENTS_LIMIT: number = 0;
+const GET_POST_COMMENTS_LIMIT: number = 0;
+const GET_COMMENTS_LIMIT: number = 10;
 
 @Injectable()
 export class PostsService {
@@ -19,11 +22,15 @@ export class PostsService {
   }
 
   getPosts(before?: Date): Observable<Post[]> {
-    return this.http.get<Post[]>(`${environment.apiUrl}/posts?limit=${GET_POSTS_LIMIT}${before ? "&before=" + before : ""}`);
+    return this.http.get<Post[]>(`${environment.apiUrl}/posts?limit=${GET_POSTS_LIMIT}${before ? "&before=" + before : ""}&comments-limit=${GET_POSTS_COMMENTS_LIMIT}`);
   }
 
   getOnePost(postId: string): Observable<Post> {
-    return this.http.get<Post>(`${environment.apiUrl}/posts/${postId}`);
+    return this.http.get<Post>(`${environment.apiUrl}/posts/${postId}?comments-limit=${GET_POST_COMMENTS_LIMIT}`);
+  }
+
+  getComments(postId: string, before?: Date): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${environment.apiUrl}/posts/${postId}/comments?limit=${GET_COMMENTS_LIMIT}${before ? "&before=" + before : ""}`);
   }
 
   addNewComment(text: string, postId: string): Observable<Comment> {
