@@ -13,7 +13,6 @@ import { PostsService } from 'src/app/core/services/posts.service';
 })
 export class PostListComponent implements OnInit {
   postsList: Post[] = [];
-  private _newCommentSubject: Subject<Comment> = new Subject();
   private _noMoreCommentToLoadSubject: Subject<string> = new Subject();
   private _lastPostDate!: Date;
   noMorePostToLoad: boolean = false;
@@ -30,10 +29,6 @@ export class PostListComponent implements OnInit {
       take(1),
       tap((posts: Post[]) => this.onNewPosts(posts))
     ).subscribe();
-  }
-
-  get newCommentSubject() {
-    return this._newCommentSubject;
   }
 
   get noMoreCommentToLoadSubject() {
@@ -81,7 +76,18 @@ export class PostListComponent implements OnInit {
 
   onPostCommented(postCommented: { comment: string, postId: string }) {
     this.postsService.addNewComment(postCommented.comment, postCommented.postId).pipe(
-      map((comment: Comment) => this._newCommentSubject.next(comment))
+      tap((comment: Comment) => {
+        const postIndex = this.postsList.findIndex(post => post.id === postCommented.postId);
+        if (postIndex !== -1) {
+          if (comment) {
+            this.postsList[postIndex]._count.comments++;
+            this.postsList[postIndex].comments.unshift(comment);;
+            this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
+          }
+        } else {
+          console.error("Error during PostListComponent:onPostCommented : no post found in the list with ID " + postCommented.postId);
+        }
+      })
     ).subscribe();
   }
 

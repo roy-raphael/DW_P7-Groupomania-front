@@ -12,7 +12,6 @@ import { PostsService } from 'src/app/core/services/posts.service';
 })
 export class PostUnitaryComponent implements OnInit {
   post!: Post;
-  private _newCommentSubject: Subject<Comment> = new Subject();
   private _noMoreCommentToLoadSubject: Subject<string> = new Subject();
 
   constructor(private route: ActivatedRoute,
@@ -26,17 +25,20 @@ export class PostUnitaryComponent implements OnInit {
     ).subscribe();
   }
 
-  get newCommentSubject() {
-    return this._newCommentSubject;
-  }
-
   get noMoreCommentToLoadSubject() {
     return this._noMoreCommentToLoadSubject;
   }
 
   onPostCommented(postCommented: { comment: string, postId: string }) {
     this.postsService.addNewComment(postCommented.comment, postCommented.postId).pipe(
-      map((comment: Comment) => this._newCommentSubject.next(comment))
+      tap((comment: Comment) => {
+        if (postCommented.postId === this.post.id) {
+          if (comment) {
+            this.post._count.comments++;
+            this.post.comments.unshift(comment);
+          }
+        }
+      })
     ).subscribe();
   }
 
