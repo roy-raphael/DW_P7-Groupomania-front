@@ -54,7 +54,7 @@ export class PostListComponent implements OnInit {
 
   onNewPosts(posts: Post[]): void {
     if (posts.length > 0) {
-      posts.map((post: Post) => this.postsService.completePostInfos(post)).forEach(post => this.postsList.push(post));
+      posts.forEach((post: Post) => this.postsList.push(this.postsService.completePostInfos(post)));
       const lastPost = [...posts].pop();
       if (lastPost) {
         this._lastPostDate = lastPost.createdAt;
