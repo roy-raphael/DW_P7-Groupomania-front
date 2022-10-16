@@ -14,13 +14,11 @@ export class PostComponent implements OnInit {
   @ViewChild(EllipsisDirective) ellipsisRef!: EllipsisDirective; // aim : tell the directive (from the template) to update
   @Input() post!: Post;
   @Input() newComment$!: Observable<Comment>;
-  @Input() postLikeUpdate$!: Observable<Post>;
   @Input() noMoreCommentToLoad$!: Observable<string>;
   @Output() postCommented = new EventEmitter<{ comment: string, postId: string }>();
   @Output() postLiked = new EventEmitter<{ like: boolean, postId: string }>();
   @Output() loadComments = new EventEmitter<{ before?: Date, postId: string }>();
   private newCommentSubscription!: Subscription;
-  private postLikeUpdateSubscription!: Subscription;
   private noMoreCommentToLoadSubscription!: Subscription;
   hasBeenEdited: boolean = false;
   hasSomeComment: boolean = false;
@@ -38,14 +36,6 @@ export class PostComponent implements OnInit {
     this.newCommentSubscription = this.newComment$.subscribe((comment: Comment) => {
       if (comment.postId === this.post.id) {
         this.post.comments.push(comment);
-        this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
-      }
-    });
-    this.postLikeUpdateSubscription = this.postLikeUpdate$.subscribe((post: Post) => {
-      if (post.id === this.post.id) {
-        this.post.likes = post.likes;
-        this.post.likesNumber = post.likesNumber;
-        this.post.userLiked = post.userLiked;
         this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });
@@ -73,7 +63,6 @@ export class PostComponent implements OnInit {
 
   ngOnDestroy() {
     this.newCommentSubscription.unsubscribe();
-    this.postLikeUpdateSubscription.unsubscribe();
     this.noMoreCommentToLoadSubscription.unsubscribe();
   }
 

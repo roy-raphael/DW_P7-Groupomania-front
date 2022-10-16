@@ -14,7 +14,6 @@ import { PostsService } from 'src/app/core/services/posts.service';
 export class PostListComponent implements OnInit {
   postsList: Post[] = [];
   private _newCommentSubject: Subject<Comment> = new Subject();
-  private _postLikeUpdateSubject: Subject<Post> = new Subject();
   private _noMoreCommentToLoadSubject: Subject<string> = new Subject();
   private _lastPostDate!: Date;
   noMorePostToLoad: boolean = false;
@@ -35,10 +34,6 @@ export class PostListComponent implements OnInit {
 
   get newCommentSubject() {
     return this._newCommentSubject;
-  }
-
-  get postLikeUpdateSubject() {
-    return this._postLikeUpdateSubject;
   }
 
   get noMoreCommentToLoadSubject() {
@@ -69,7 +64,18 @@ export class PostListComponent implements OnInit {
 
   onPostLiked(postLiked: { like: boolean, postId: string }) {
     this.postsService.likePost(postLiked.like, postLiked.postId).pipe(
-      map(post => this._postLikeUpdateSubject.next(this.postsService.completePostInfos(post)))
+      tap(post => {
+        const postIndex = this.postsList.findIndex(post => post.id === postLiked.postId);
+        if (postIndex !== -1) {
+          const updatedPost = this.postsService.completePostInfos(post);
+          this.postsList[postIndex].likes = updatedPost.likes;
+          this.postsList[postIndex].likesNumber = updatedPost.likesNumber;
+          this.postsList[postIndex].userLiked = updatedPost.userLiked;
+          this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
+        } else {
+          console.error("Error during PostListComponent:onPostLiked : no post found in the list with ID " + postLiked.postId);
+        }
+      })
     ).subscribe();
   }
 

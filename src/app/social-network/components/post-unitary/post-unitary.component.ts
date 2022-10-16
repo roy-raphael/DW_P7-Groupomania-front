@@ -13,7 +13,6 @@ import { PostsService } from 'src/app/core/services/posts.service';
 export class PostUnitaryComponent implements OnInit {
   post!: Post;
   private _newCommentSubject: Subject<Comment> = new Subject();
-  private _postLikeUpdateSubject: Subject<Post> = new Subject();
   private _noMoreCommentToLoadSubject: Subject<string> = new Subject();
 
   constructor(private route: ActivatedRoute,
@@ -31,10 +30,6 @@ export class PostUnitaryComponent implements OnInit {
     return this._newCommentSubject;
   }
 
-  get postLikeUpdateSubject() {
-    return this._postLikeUpdateSubject;
-  }
-
   get noMoreCommentToLoadSubject() {
     return this._noMoreCommentToLoadSubject;
   }
@@ -47,7 +42,12 @@ export class PostUnitaryComponent implements OnInit {
 
   onPostLiked(postLiked: { like: boolean, postId: string }) {
     this.postsService.likePost(postLiked.like, postLiked.postId).pipe(
-      map(post => this._postLikeUpdateSubject.next(this.postsService.completePostInfos(post)))
+      tap(post => {
+        const updatedPost = this.postsService.completePostInfos(post);
+        this.post.likes = updatedPost.likes;
+        this.post.likesNumber = updatedPost.likesNumber;
+        this.post.userLiked = updatedPost.userLiked;
+      })
     ).subscribe();
   }
 
