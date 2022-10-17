@@ -64,6 +64,7 @@ import { Comment } from '../../../core/models/comment.model';
 export class CommentsComponent implements OnInit {
 
   @Input() comments!: Comment[];
+  @Input() showComments!: boolean;
   @Input() noMoreCommentToLoad!: boolean;
   @Output() newComment = new EventEmitter<string>();
   @Output() loadMoreComments = new EventEmitter<void>();

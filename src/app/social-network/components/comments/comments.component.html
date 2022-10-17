@@ -6,15 +6,16 @@
         <mat-icon>send</mat-icon>
     </button>
 </div>
-<mat-list *ngIf="comments.length" @list>
-    <h2 matSubheader>Commentaires</h2>
-    <mat-list-item *ngFor="let comment of comments; let i = index"
-               [@listItem]="animationStates[i]"
-               (mouseenter)="onListItemMouseEnter(i)"
-               (mouseleave)="onListItemMouseLeave(i)"
->
-        <span class="comment-text" mat-line>{{ comment.text }}</span>
-        <span class="comment-date" mat-line>{{ comment.createdAt | timeAgo }}</span>
-    </mat-list-item>
-</mat-list>
-<button class="load-more-button" *ngIf="!noMoreCommentToLoad" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more comments">Afficher plus ...</button>
+<div *ngIf="showComments">
+    <mat-list *ngIf="comments.length" @list>
+        <mat-list-item *ngFor="let comment of comments; let i = index"
+                [@listItem]="animationStates[i]"
+                (mouseenter)="onListItemMouseEnter(i)"
+                (mouseleave)="onListItemMouseLeave(i)"
+        >
+            <span class="comment-text" mat-line>{{ comment.text }}</span>
+            <span class="comment-date" mat-line>{{ comment.createdAt | timeAgo }}</span>
+        </mat-list-item>
+    </mat-list>
+    <button class="load-more-button" *ngIf="!noMoreCommentToLoad" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more comments">Afficher plus ...</button>
+</div>

@@ -31,7 +31,7 @@
     </mat-card-content>
     <mat-card-actions>
         <div class="actions-bar">
-            <button class="comments-button" mat-flat-button *ngIf="post._count.comments ? (post._count.comments !== 0) : false">
+            <button class="comments-button" mat-flat-button *ngIf="post._count.comments ? (post._count.comments !== 0) : false" (click)="hideOrShowComments()">
                 {{(post._count.comments > 1) ? (post._count.comments + " commentaires") : "1 commentaire"}}
             </button>
             <div class="likes">
@@ -41,6 +41,6 @@
                 </button>
             </div>
         </div>
-        <app-comments [comments]="post.comments" [noMoreCommentToLoad]="noMoreCommentToLoad" (newComment)="onNewComment($event)" (loadMoreComments)="onloadMoreComments()"></app-comments>
+        <app-comments [comments]="post.comments" [showComments]="showComments" [noMoreCommentToLoad]="noMoreCommentToLoad" (newComment)="onNewComment($event)" (loadMoreComments)="onloadMoreComments()"></app-comments>
     </mat-card-actions>
 </mat-card>

@@ -22,6 +22,7 @@ export class PostComponent implements OnInit {
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
   noMoreCommentToLoad: boolean = true;
+  showComments: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -44,6 +45,8 @@ export class PostComponent implements OnInit {
       if (newPost != null) {
         this.hasBeenEdited = newPost.createdAt !== newPost.updatedAt;
         this.noMoreCommentToLoad = newPost.comments.length >= newPost._count.comments;
+        // only at startup
+        this.showComments = newPost._count.comments > 0 && newPost.comments.length > 0;
       }
     }
   }
@@ -77,6 +80,7 @@ export class PostComponent implements OnInit {
 
   onNewComment(comment: string) {
     this.postCommented.emit({ comment, postId: this.post.id });
+    this.showComments = true;
   }
 
   onLike() {
@@ -86,5 +90,14 @@ export class PostComponent implements OnInit {
   onloadMoreComments() {
     const lastComment : Comment = this.post.comments[this.post.comments.length - 1];
     this.loadComments.emit({ before: lastComment ? lastComment.createdAt : undefined, postId: this.post.id });
+  }
+
+  hideOrShowComments() {
+    if (!this.showComments) {
+      if (this.post._count.comments > 0 && this.post.comments.length === 0) {
+        this.onloadMoreComments();
+      }
+    }
+    this.showComments = !this.showComments;
   }
 }
