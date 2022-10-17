@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 
 const GET_POSTS_LIMIT: number = 10;
 const GET_POSTS_COMMENTS_LIMIT: number = 0;
-const GET_POST_COMMENTS_LIMIT: number = 0;
+const GET_POST_COMMENTS_LIMIT: number = 10;
 const GET_COMMENTS_LIMIT: number = 10;
 
 @Injectable()
@@ -57,7 +57,8 @@ export class PostsService {
       likesNumber: post.likes.length,
       userLiked: this.authService.containsCurrentUser(post.likes),
       canEditAndDelete: this.authService.canEditAndDeletePost(post.authorId),
-      ...post
+      ...post,
+      comments: post.comments.reverse()
     };
   }
 }

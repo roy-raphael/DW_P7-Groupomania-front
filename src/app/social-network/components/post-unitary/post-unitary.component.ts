@@ -35,7 +35,7 @@ export class PostUnitaryComponent implements OnInit {
         if (postCommented.postId === this.post.id) {
           if (comment) {
             this.post._count.comments++;
-            this.post.comments.unshift(comment);
+            this.post.comments.push(comment);
           }
         }
       })
@@ -61,7 +61,7 @@ export class PostUnitaryComponent implements OnInit {
           if (comments) {
             if (comments.length > 0) {
               console.log("PostComponent:moreComments good component");
-              this.post.comments.push(...comments);
+              this.post.comments.unshift(...comments.reverse());
               this._commentsListChangedSubject.next(params.postId);
             }
           }

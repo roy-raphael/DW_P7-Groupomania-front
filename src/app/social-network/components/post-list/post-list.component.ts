@@ -81,7 +81,7 @@ export class PostListComponent implements OnInit {
         if (postIndex !== -1) {
           if (comment) {
             this.postsList[postIndex]._count.comments++;
-            this.postsList[postIndex].comments.unshift(comment);;
+            this.postsList[postIndex].comments.push(comment);;
             this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
           }
         } else {
@@ -97,7 +97,7 @@ export class PostListComponent implements OnInit {
         const postIndex = this.postsList.findIndex(post => post.id === params.postId);
         if (postIndex !== -1) {
           if (comments.length > 0) {
-            this.postsList[postIndex].comments.push(...comments);
+            this.postsList[postIndex].comments.unshift(...comments.reverse());
             this._commentsListChangedSubject.next(params.postId);
             this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
           }

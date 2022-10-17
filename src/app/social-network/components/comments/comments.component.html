@@ -8,6 +8,7 @@
 </div>
 <div *ngIf="showComments">
     <mat-spinner *ngIf="loading"></mat-spinner>
+    <button class="load-more-button" *ngIf="!noMoreCommentToLoad && !loading" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more comments">Afficher plus ...</button>
     <mat-list *ngIf="comments.length" @list>
         <mat-list-item *ngFor="let comment of comments; let i = index"
                 [@listItem]="animationStates[i]"
@@ -18,5 +19,4 @@
             <span class="comment-date" mat-line>{{ comment.createdAt | timeAgo }}</span>
         </mat-list-item>
     </mat-list>
-    <button class="load-more-button" *ngIf="!noMoreCommentToLoad && !loading" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more comments">Afficher plus ...</button>
 </div>

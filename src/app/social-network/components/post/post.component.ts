@@ -91,8 +91,8 @@ export class PostComponent implements OnInit {
 
   onloadMoreComments() {
     this.commentsLoading = true;
-    const lastComment : Comment = this.post.comments[this.post.comments.length - 1];
-    this.loadComments.emit({ before: lastComment ? lastComment.createdAt : undefined, postId: this.post.id });
+    const oldestComment : Comment = this.post.comments[0];
+    this.loadComments.emit({ before: oldestComment ? oldestComment.createdAt : undefined, postId: this.post.id });
   }
 
   hideOrShowComments() {
