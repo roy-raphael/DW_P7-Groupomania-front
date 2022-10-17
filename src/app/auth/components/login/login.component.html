@@ -1,1 +1,23 @@
-<p>login works!</p>
+<div class="login-wrapper">
+    <mat-card [formGroup]="mainForm" class="main-form">
+        <mat-card-title class="form-title">Connexion</mat-card-title>
+        <div class="form-row">
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input type="text" matInput formControlName="email">
+                <mat-error>{{ getFormControlErrorText(emailCtrl) }}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Mot de passe</mat-label>
+                <input type="password" matInput formControlName="password">
+                <mat-error>Ce champ est requis</mat-error>
+            </mat-form-field>
+        </div>
+        <mat-card-actions>
+            <button [disabled]="!mainForm.valid" mat-flat-button color="primary" (click)="onSubmitForm()">Se connecter</button>
+        </mat-card-actions>
+        <mat-spinner *ngIf="loading" color="primary" mode="indeterminate"></mat-spinner>
+        <p *ngIf="error" class="error-box">{{ error }}</p>
+        <p>Vouc n'avez pas de compte ? <a [routerLink]="'/signup'">S'inscrire</a></p>
+    </mat-card>
+</div>

@@ -60,10 +60,10 @@ export class AuthService {
     ).subscribe();
   }
   
-  login(email: string, password: string): void {
+  login(email: string, password: string): Observable<{user: User, accessToken: string, refreshToken: string}> {
     const refreshToken = this.getRefreshToken();
     const body: {email: string, password: string, refreshToken?: string} = refreshToken ? {email, password, refreshToken} : {email, password};
-    this.http.post<{user: User, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/login`, body).pipe(
+    return this.http.post<{user: User, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/login`, body).pipe(
       take(1),
       tap(loginResponse => {
         this.setUser(loginResponse.user);
@@ -78,9 +78,9 @@ export class AuthService {
         this.resetTokens();
         console.log('Caught in login CatchError. Throwing error');
         console.log(error);
-        throw new Error(error);
+        throw error;
       })
-    ).subscribe();
+    );
   }
 
   logOut(): void {
