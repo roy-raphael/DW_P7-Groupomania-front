@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Post } from 'src/app/core/models/post.model';
 import { EllipsisDirective } from 'ngx-ellipsis';
 import { Comment } from 'src/app/core/models/comment.model';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post',
@@ -13,15 +13,15 @@ import { Observable, Subscription } from 'rxjs';
 export class PostComponent implements OnInit {
   @ViewChild(EllipsisDirective) ellipsisRef!: EllipsisDirective; // aim : tell the directive (from the template) to update
   @Input() post!: Post;
-  @Input() noMoreCommentToLoad$!: Observable<string>;
+  @Input() commentsListChanged$!: Observable<string>;
   @Output() postCommented = new EventEmitter<{ comment: string, postId: string }>();
   @Output() postLiked = new EventEmitter<{ like: boolean, postId: string }>();
   @Output() loadComments = new EventEmitter<{ before?: Date, postId: string }>();
-  private noMoreCommentToLoadSubscription!: Subscription;
+  private commentsListChangedSubscription!: Subscription;
   hasBeenEdited: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
-  noMoreCommentToLoad: boolean = false;
+  noMoreCommentToLoad: boolean = true;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -29,9 +29,9 @@ export class PostComponent implements OnInit {
     // Calling detectChanges here is the workaround for not having the error "ExpressionChangedAfterItHasBeenCheckedError" (for seeMoreButton)
     this.cdr.detectChanges();
     this.ellipsisRef.applyEllipsis();
-    this.noMoreCommentToLoadSubscription = this.noMoreCommentToLoad$.subscribe((postId: string) => {
+    this.commentsListChangedSubscription = this.commentsListChanged$.subscribe((postId: string) => {
       if (postId === this.post.id) {
-        this.noMoreCommentToLoad = true;
+        this.noMoreCommentToLoad = this.post.comments.length >= this.post._count.comments;
         this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });
@@ -43,13 +43,13 @@ export class PostComponent implements OnInit {
       const newPost: Post = postChanges.currentValue;
       if (newPost != null) {
         this.hasBeenEdited = newPost.createdAt !== newPost.updatedAt;
-        this.noMoreCommentToLoad = this.post.comments.length >= newPost._count.comments;
+        this.noMoreCommentToLoad = newPost.comments.length >= newPost._count.comments;
       }
     }
   }
 
   ngOnDestroy() {
-    this.noMoreCommentToLoadSubscription.unsubscribe();
+    this.commentsListChangedSubscription.unsubscribe();
   }
 
   // Saves if the text has been truncated or not

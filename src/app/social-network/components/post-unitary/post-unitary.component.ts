@@ -12,7 +12,7 @@ import { PostsService } from 'src/app/core/services/posts.service';
 })
 export class PostUnitaryComponent implements OnInit {
   post!: Post;
-  private _noMoreCommentToLoadSubject: Subject<string> = new Subject();
+  private _commentsListChangedSubject: Subject<string> = new Subject();
 
   constructor(private route: ActivatedRoute,
               private postsService: PostsService) {}
@@ -25,8 +25,8 @@ export class PostUnitaryComponent implements OnInit {
     ).subscribe();
   }
 
-  get noMoreCommentToLoadSubject() {
-    return this._noMoreCommentToLoadSubject;
+  get commentsListChangedSubject() {
+    return this._commentsListChangedSubject;
   }
 
   onPostCommented(postCommented: { comment: string, postId: string }) {
@@ -62,9 +62,7 @@ export class PostUnitaryComponent implements OnInit {
             if (comments.length > 0) {
               console.log("PostComponent:moreComments good component");
               this.post.comments.push(...comments);
-              if (this.post.comments.length >= this.post._count.comments) {
-                this._noMoreCommentToLoadSubject.next(params.postId);
-              }
+              this._commentsListChangedSubject.next(params.postId);
             }
           }
         }

@@ -2,4 +2,4 @@
     (postCommented)="onPostCommented($event)"
     (postLiked)="onPostLiked($event)"
     (loadComments)="onLoadComments($event)"
-    [noMoreCommentToLoad$]="noMoreCommentToLoadSubject.asObservable()"></app-post>
+    [commentsListChanged$]="commentsListChangedSubject.asObservable()"></app-post>

@@ -2,5 +2,5 @@
     (postCommented)="onPostCommented($event)"
     (postLiked)="onPostLiked($event)"
     (loadComments)="onLoadComments($event)"
-    [noMoreCommentToLoad$]="noMoreCommentToLoadSubject.asObservable()"></app-post>
+    [commentsListChanged$]="commentsListChangedSubject.asObservable()"></app-post>
 <button class="load-more-button" *ngIf="!noMorePostToLoad" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more posts">+ Afficher plus</button>

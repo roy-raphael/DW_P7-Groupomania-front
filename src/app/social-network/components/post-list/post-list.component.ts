@@ -13,7 +13,7 @@ import { PostsService } from 'src/app/core/services/posts.service';
 })
 export class PostListComponent implements OnInit {
   postsList: Post[] = [];
-  private _noMoreCommentToLoadSubject: Subject<string> = new Subject();
+  private _commentsListChangedSubject: Subject<string> = new Subject();
   private _lastPostDate!: Date;
   noMorePostToLoad: boolean = false;
 
@@ -31,8 +31,8 @@ export class PostListComponent implements OnInit {
     ).subscribe();
   }
 
-  get noMoreCommentToLoadSubject() {
-    return this._noMoreCommentToLoadSubject;
+  get commentsListChangedSubject() {
+    return this._commentsListChangedSubject;
   }
 
   loadMore() {
@@ -98,10 +98,8 @@ export class PostListComponent implements OnInit {
         if (postIndex !== -1) {
           if (comments.length > 0) {
             this.postsList[postIndex].comments.push(...comments);
+            this._commentsListChangedSubject.next(params.postId);
             this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
-            if (this.postsList[postIndex].comments.length >= this.postsList[postIndex]._count.comments) {
-              this._noMoreCommentToLoadSubject.next(params.postId);
-            }
           }
         } else {
           console.error("Error during PostListComponent:onLoadComments : no post found in the list with ID " + params.postId);
