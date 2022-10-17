@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PostUnitaryComponent } from './components/post-unitary/post-unitary.component';
 import { PostResolver } from './resolvers/post.resolver';
 import { PageNotFoundModule } from '../page-not-found/page-not-found.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { PageNotFoundModule } from '../page-not-found/page-not-found.module';
     SharedModule,
     EllipsisModule,
     PageNotFoundModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InfiniteScrollModule
   ],
   providers: [
     PostsService,

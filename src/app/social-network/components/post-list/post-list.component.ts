@@ -16,6 +16,8 @@ export class PostListComponent implements OnInit {
   private _commentsListChangedSubject: Subject<string> = new Subject();
   private _lastPostDate!: Date;
   noMorePostToLoad: boolean = false;
+  postsLoading: boolean = false;
+  infiniteScrollDistance: number = 1; // Percentage point of the scroll nob relatively to the infinite-scroll container 
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -37,6 +39,7 @@ export class PostListComponent implements OnInit {
   }
 
   loadMore() {
+    this.postsLoading = true;
     this.postsService.getPosts(this._lastPostDate).pipe(
       take(1),
       tap((posts: Post[]) => this.onNewPosts(posts))
@@ -50,6 +53,7 @@ export class PostListComponent implements OnInit {
       if (lastPost) {
         this._lastPostDate = lastPost.createdAt;
       }
+      this.postsLoading = false;
       this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
     }
     if (!this.noMorePostToLoad && posts.length < this.postsService.getPostsLimit()) {
@@ -111,5 +115,11 @@ export class PostListComponent implements OnInit {
 
   onOpenPost(postId: string) {
     this.router.navigate([postId], { relativeTo: this.route });
+  }
+
+  onScrollDown(): void {
+    if (!this.noMorePostToLoad) {
+      this.loadMore();
+    }
   }
 }
