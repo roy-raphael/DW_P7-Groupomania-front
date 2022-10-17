@@ -23,6 +23,7 @@ export class PostComponent implements OnInit {
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
   noMoreCommentToLoad: boolean = true;
   showComments: boolean = false;
+  commentsLoading: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -32,6 +33,7 @@ export class PostComponent implements OnInit {
     this.ellipsisRef.applyEllipsis();
     this.commentsListChangedSubscription = this.commentsListChanged$.subscribe((postId: string) => {
       if (postId === this.post.id) {
+        this.commentsLoading = false;
         this.noMoreCommentToLoad = this.post.comments.length >= this.post._count.comments;
         this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
@@ -88,6 +90,7 @@ export class PostComponent implements OnInit {
   }
 
   onloadMoreComments() {
+    this.commentsLoading = true;
     const lastComment : Comment = this.post.comments[this.post.comments.length - 1];
     this.loadComments.emit({ before: lastComment ? lastComment.createdAt : undefined, postId: this.post.id });
   }

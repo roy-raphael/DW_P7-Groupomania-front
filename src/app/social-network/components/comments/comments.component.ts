@@ -66,6 +66,7 @@ export class CommentsComponent implements OnInit {
   @Input() comments!: Comment[];
   @Input() showComments!: boolean;
   @Input() noMoreCommentToLoad!: boolean;
+  @Input() loading = false;
   @Output() newComment = new EventEmitter<string>();
   @Output() loadMoreComments = new EventEmitter<void>();
 

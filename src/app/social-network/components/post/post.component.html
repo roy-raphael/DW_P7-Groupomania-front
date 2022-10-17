@@ -41,6 +41,11 @@
                 </button>
             </div>
         </div>
-        <app-comments [comments]="post.comments" [showComments]="showComments" [noMoreCommentToLoad]="noMoreCommentToLoad" (newComment)="onNewComment($event)" (loadMoreComments)="onloadMoreComments()"></app-comments>
+        <app-comments [comments]="post.comments"
+            [showComments]="showComments"
+            [loading]="commentsLoading"
+            [noMoreCommentToLoad]="noMoreCommentToLoad"
+            (newComment)="onNewComment($event)"
+            (loadMoreComments)="onloadMoreComments()"></app-comments>
     </mat-card-actions>
 </mat-card>
