@@ -1,4 +1,4 @@
-<app-post *ngIf="post" [post]="post"
+<app-post *ngIf="post" [post]="post" [isUnitaryPost]="true"
     (postCommented)="onPostCommented($event)"
     (postLiked)="onPostLiked($event)"
     (loadComments)="onLoadComments($event)"

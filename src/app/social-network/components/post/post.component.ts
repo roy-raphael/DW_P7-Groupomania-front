@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Post } from 'src/app/core/models/post.model';
 import { EllipsisDirective } from 'ngx-ellipsis';
 import { Comment } from 'src/app/core/models/comment.model';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post',
@@ -14,9 +14,11 @@ export class PostComponent implements OnInit {
   @ViewChild(EllipsisDirective) ellipsisRef!: EllipsisDirective; // aim : tell the directive (from the template) to update
   @Input() post!: Post;
   @Input() commentsListChanged$!: Observable<string>;
+  @Input() isUnitaryPost!: boolean;
   @Output() postCommented = new EventEmitter<{ comment: string, postId: string }>();
   @Output() postLiked = new EventEmitter<{ like: boolean, postId: string }>();
   @Output() loadComments = new EventEmitter<{ before?: Date, postId: string }>();
+  @Output() openPost = new EventEmitter<string>();
   private commentsListChangedSubscription!: Subscription;
   hasBeenEdited: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
@@ -28,6 +30,10 @@ export class PostComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    if (this.post != null) {
+      this.hasBeenEdited = this.post.createdAt !== this.post.updatedAt;
+      this.showComments = this.post._count.comments > 0 && this.post.comments.length > 0;
+    }
     // Calling detectChanges here is the workaround for not having the error "ExpressionChangedAfterItHasBeenCheckedError" (for seeMoreButton)
     this.cdr.detectChanges();
     this.ellipsisRef.applyEllipsis();
@@ -38,19 +44,6 @@ export class PostComponent implements OnInit {
         this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });
-  }
-  
-  ngOnChanges(changes: SimpleChanges) {
-    const postChanges = changes['post'];
-    if (postChanges) {
-      const newPost: Post = postChanges.currentValue;
-      if (newPost != null) {
-        this.hasBeenEdited = newPost.createdAt !== newPost.updatedAt;
-        this.noMoreCommentToLoad = newPost.comments.length >= newPost._count.comments;
-        // only at startup
-        this.showComments = newPost._count.comments > 0 && newPost.comments.length > 0;
-      }
-    }
   }
 
   ngOnDestroy() {
@@ -102,5 +95,9 @@ export class PostComponent implements OnInit {
       }
     }
     this.showComments = !this.showComments;
+  }
+
+  viewPost() {
+    this.openPost.emit(this.post.id);
   }
 }

@@ -7,20 +7,24 @@
             <span>{{ post.createdAt | timeAgo }}</span>
             <span *ngIf="hasBeenEdited"> (dernière modification : {{ post.updatedAt | timeAgo }})</span>
         </mat-card-subtitle>
-        <button mat-icon-button *ngIf="post.canEditAndDelete" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <button mat-icon-button *ngIf="post.canEditAndDelete || !isUnitaryPost" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-            <mat-icon>edit</mat-icon>
-            <span>Editer la publication</span>
+            <button mat-menu-item *ngIf="!isUnitaryPost" (click)="viewPost()">
+                <mat-icon>visibility</mat-icon>
+                <span>Voir la publication</span>
             </button>
-            <button mat-menu-item>
-            <mat-icon>delete</mat-icon>
-            <span>Supprimer la publication</span>
+            <button mat-menu-item *ngIf="post.canEditAndDelete">
+                <mat-icon>edit</mat-icon>
+                <span>Editer la publication</span>
+            </button>
+            <button mat-menu-item *ngIf="post.canEditAndDelete">
+                <mat-icon>delete</mat-icon>
+                <span>Supprimer la publication</span>
             </button>
         </mat-menu>
-    </mat-card-header>    
+    </mat-card-header>
     <mat-card-content>
         <img mat-card-image *ngIf="post.imageUrl as imageUrl" [src]="imageUrl" [alt]="post.imageAlt ? post.imageAlt : 'Image du post'">
         <!-- use ngx-ellipsis to apply a text ellipsis (height defined in CSS), and to tell the component if it has been truncated -->

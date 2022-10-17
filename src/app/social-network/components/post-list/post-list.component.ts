@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { map, Observable, Subject, take, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map, Subject, take, tap } from 'rxjs';
 import { Comment } from 'src/app/core/models/comment.model';
 import { Post } from 'src/app/core/models/post.model';
 import { PostsService } from 'src/app/core/services/posts.service';
@@ -18,6 +18,7 @@ export class PostListComponent implements OnInit {
   noMorePostToLoad: boolean = false;
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private cdr: ChangeDetectorRef,
               private postsService: PostsService) { }
 
@@ -106,5 +107,9 @@ export class PostListComponent implements OnInit {
         }
       })
     ).subscribe();
+  }
+
+  onOpenPost(postId: string) {
+    this.router.navigate([postId], { relativeTo: this.route });
   }
 }
