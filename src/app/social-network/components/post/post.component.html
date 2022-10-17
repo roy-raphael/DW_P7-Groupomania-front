@@ -36,7 +36,8 @@
     <mat-card-actions>
         <div class="actions-bar">
             <button class="comments-button" mat-flat-button *ngIf="post._count.comments ? (post._count.comments !== 0) : false" (click)="hideOrShowComments()">
-                {{(post._count.comments > 1) ? (post._count.comments + " commentaires") : "1 commentaire"}}
+                {{(post._count.comments > 1) ? (post._count.comments + " commentaires ") : "1 commentaire "}}
+                <mat-icon>{{ showComments ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</mat-icon>
             </button>
             <div class="likes">
                 <p>{{post.likesNumber ? post.likesNumber : 0}}</p>
