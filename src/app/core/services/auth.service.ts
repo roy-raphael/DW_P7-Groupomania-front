@@ -1,7 +1,7 @@
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, take, tap } from 'rxjs';
+import { catchError, Observable, ReplaySubject, take, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { User } from '../models/user.model';
@@ -29,6 +29,7 @@ export class AuthService {
   private redirectedToLogin: boolean = false;
   private hasUserAdminRole = false;
   currentRouteRequiringAuth: string = "";
+  private _userSubject: ReplaySubject<User | null> = new ReplaySubject(1); // Store only the last value
   
   constructor(private handler: HttpBackend,
     private router: Router) {
@@ -40,6 +41,10 @@ export class AuthService {
     const refreshToken = this.getRefreshToken();
     if (refreshToken) this.updateRefreshTokenExpiration(refreshToken);
     this.retrieveUser();
+  }
+
+  get userSubject() {
+    return this._userSubject;
   }
   
   // Methods relative to API endpoints
@@ -54,6 +59,7 @@ export class AuthService {
       }),
       catchError(error => {
         this.resetTokens();
+        this.setUser(null);
         console.log('Caught in signup CatchError. Throwing error');
         throw new Error(error);
       })
@@ -76,6 +82,7 @@ export class AuthService {
       }),
       catchError(error => {
         this.resetTokens();
+        this.setUser(null);
         console.log('Caught in login CatchError. Throwing error');
         console.log(error);
         throw error;
@@ -86,6 +93,7 @@ export class AuthService {
   logOut(): void {
     const refreshToken = this.getRefreshToken();
     this.resetTokens();
+    this.setUser(null);
     if (refreshToken) {
       this.http.post<{}>(`${environment.apiUrl}/auth/logout`, {refreshToken}).pipe(
         take(1),
@@ -108,18 +116,23 @@ export class AuthService {
 
   retrieveUser(): void {
     const userString = window.localStorage.getItem("user");
-    if (userString == null) this.user = null;
-    else this.user = JSON.parse(userString) as User;
+    this.setUser(userString ? JSON.parse(userString) as User : null);
   }
 
   getUser(): User | null {
     return this.user;
   }
 
-  setUser(user: User): void {
+  setUser(user: User | null): void {
     this.user = user;
-    this.hasUserAdminRole = user.role === Role.Admin;
-    window.localStorage.setItem("user", JSON.stringify(user));
+    this._userSubject.next(user);
+    if (user) {
+      this.hasUserAdminRole = user.role === Role.Admin;
+      window.localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      this.hasUserAdminRole = false;
+      window.localStorage.removeItem("user");
+    }
   }
   
   getAccessToken(): string | null {
@@ -228,8 +241,6 @@ export class AuthService {
   }
   
   resetTokens(): void {
-    this.user = null;
-    this.hasUserAdminRole = false;
     window.localStorage.removeItem("accessToken");
     window.localStorage.removeItem("refreshToken");
     this.accessTokenExpirationTimestamp = 0;

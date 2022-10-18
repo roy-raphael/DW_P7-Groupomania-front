@@ -3,7 +3,18 @@
     <ul>
         <li><a routerLink="/social-network">Accueil</a></li>
         <li><a routerLink="/post-form">Créer un post</a></li>
-        <li><a routerLink="/login">Se connecter</a></li>
-        <li><a routerLink="/signup">S'inscrire</a></li>
     </ul>
+    <div class="connection-menu">
+        <div *ngIf="user$ | async as user; else disconnected" class="connection-menu">
+            <span>({{ { firstName: user.firstName, lastName: user.surName, pseudo: user.pseudo } | username }})</span>
+            <button routerLink="/login" class="connect-button" mat-flat-button (click)="disconnect()">Se déconnecter
+                <mat-icon>account_circle</mat-icon>
+            </button>
+        </div>
+        <ng-template #disconnected class="connection-menu">
+            <button routerLink="/login" class="connect-button" mat-flat-button>Se connecter
+                <mat-icon>person</mat-icon>
+            </button>
+        </ng-template>
+    </div>
 </mat-toolbar>

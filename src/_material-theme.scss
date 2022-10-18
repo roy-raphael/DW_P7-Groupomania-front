@@ -59,11 +59,37 @@ $secondary-palette: (
   )
 );
 
+$tertiary-palette: (
+  50: #f0f0fd,
+  100: #d7dbed,
+  200: #c1c4d9,
+  300: #a8acc6,
+  400: #9599b5,
+  500: #8287a6,
+  600: #727894,
+  700: #5f637d,
+  800: #4e5166,
+  900: #393c4e,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87),
+    600: rgba(black, 0.87),
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $groupomania-front-primary: mat.define-palette($primary-palette, 700, 400, 900);
 $groupomania-front-accent: mat.define-palette($secondary-palette, 100, 50, 400);
+$groupomania-front-tertiary: mat.define-palette($tertiary-palette, 800, 600, 900);
 
 // The warn palette is optional (defaults to red).
 $groupomania-front-warn: mat.define-palette(mat.$red-palette);

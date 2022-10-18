@@ -1,3 +1,6 @@
+@use '@angular/material' as mat;
+@import "src/_material-theme.scss";
+
 ul {
     list-style: none;
 }
@@ -5,4 +8,20 @@ ul {
 li {
     display: inline-block;
     margin-right: 20px;
+}
+
+.connection-menu {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.connect-button {
+    color: mat.get-color-from-palette($groupomania-front-accent, default);
+    background-color: mat.get-color-from-palette($groupomania-front-tertiary, default);
+
+    & mat-icon {
+        margin-left: 5px;
+    }
 }
