@@ -1,22 +1,27 @@
-<div class="comments-row">
-    <mat-form-field>
-        <input type="text" matInput placeholder="Laissez un commentaire…" [formControl]="commentCtrl">
-    </mat-form-field>
-    <button mat-icon-button color="primary" (click)="onLeaveComment()">
-        <mat-icon>send</mat-icon>
-    </button>
-</div>
-<div *ngIf="showComments">
-    <mat-spinner *ngIf="loading"></mat-spinner>
-    <button class="load-more-button" *ngIf="!noMoreCommentToLoad && !loading" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more comments">Afficher plus ...</button>
-    <mat-list *ngIf="comments.length" @list>
-        <mat-list-item *ngFor="let comment of comments; let i = index"
-                [@listItem]="animationStates[i]"
-                (mouseenter)="onListItemMouseEnter(i)"
-                (mouseleave)="onListItemMouseLeave(i)"
-        >
-            <span class="comment-text" mat-line>{{ comment.text }}</span>
-            <span class="comment-date" mat-line>{{ comment.createdAt | timeAgo }}</span>
-        </mat-list-item>
-    </mat-list>
+<div class="comments-component">
+    <div class="comments-row">
+        <mat-form-field>
+            <input type="text" matInput placeholder="Laissez un commentaire…" [formControl]="commentCtrl">
+        </mat-form-field>
+        <button mat-icon-button color="primary" (click)="onLeaveComment()">
+            <mat-icon>send</mat-icon>
+        </button>
+    </div>
+    <div *ngIf="showComments">
+        <mat-spinner *ngIf="loading"></mat-spinner>
+        <button class="load-more-button" *ngIf="!noMoreCommentToLoad && !loading" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more comments">Afficher plus ...</button>
+        <mat-list *ngIf="comments.length" @list>
+            <mat-list-item *ngFor="let comment of comments; let i = index"
+                    [@listItem]="animationStates[i]"
+                    (mouseenter)="onListItemMouseEnter(i)"
+                    (mouseleave)="onListItemMouseLeave(i)"
+            >
+                <span class="comment-author-date" mat-line>
+                    <span class="comment-author">{{ { firstName: comment.author.firstName, lastName: comment.author.surName, pseudo: comment.author.pseudo } | username }}</span>
+                    <span class="comment-date">{{ comment.createdAt | timeAgo }}</span>
+                </span>
+                <span class="comment-text" mat-line>{{ comment.text }}</span>
+            </mat-list-item>
+        </mat-list>
+    </div>
 </div>
