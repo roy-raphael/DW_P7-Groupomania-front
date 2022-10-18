@@ -34,7 +34,7 @@ export class PostsService {
   }
 
   addNewComment(text: string, postId: string): Observable<Comment> {
-    const authorId = this.authService.getUserId();
+    const authorId = this.authService.userId;
     if (authorId) {
       return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comment`, {text, authorId});
     } else {
@@ -43,7 +43,7 @@ export class PostsService {
   }
 
   likePost(postLiked: boolean, postId: string): Observable<Post> {
-    const userId = this.authService.getUserId();
+    const userId = this.authService.userId;
     if (userId) {
       const like = Number(postLiked);
       return this.http.post<Post>(`${environment.apiUrl}/posts/${postId}/like`, {userId, like});

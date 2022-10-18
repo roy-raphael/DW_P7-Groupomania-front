@@ -45,22 +45,14 @@ export class AuthInterceptor implements HttpInterceptor {
         return this.authService.refreshTokenObservable(token).pipe(
           switchMap((refreshResponse: {user: User, accessToken: string, refreshToken: string}) => {
             this.isRefreshing = false;
-
-            this.authService.setUser(refreshResponse.user);
-            this.authService.setAccessToken(refreshResponse.accessToken);
-            this.authService.setRefreshToken(refreshResponse.refreshToken);
             this.accessToken$.next(refreshResponse.accessToken);
-            
             return next.handle(this.addTokenHeader(request, refreshResponse.accessToken));
           }),
           catchError((error) => {
             this.isRefreshing = false;
-
             if (error instanceof HttpErrorResponse) this.logRequestError(<HttpErrorResponse>error, request.url);
             else console.log("Error when refreshing : " + error.message);
-            console.log("Disconnecting the user");
-            
-            this.authService.logOut();
+            console.log("User disconnected");
             this.authService.redirectToLogin();
             return throwError(() => error);
           })
