@@ -34,7 +34,7 @@ export class PostsService {
   }
 
   addNewComment(text: string, postId: string): Observable<Comment> {
-    return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comment`, {text});
+    return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comments`, {text});
   }
 
   likePost(postLiked: boolean, postId: string): Observable<Post> {
