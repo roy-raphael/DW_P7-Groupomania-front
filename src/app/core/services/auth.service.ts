@@ -153,10 +153,6 @@ export class AuthService {
       window.localStorage.removeItem("user");
     }
   }
-
-  get userId(): string | null {
-    return this._userId;
-  }
   
   getAccessToken(): string | null {
     return localStorage.getItem("accessToken");

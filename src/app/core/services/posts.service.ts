@@ -34,22 +34,11 @@ export class PostsService {
   }
 
   addNewComment(text: string, postId: string): Observable<Comment> {
-    const authorId = this.authService.userId;
-    if (authorId) {
-      return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comment`, {text, authorId});
-    } else {
-      return EMPTY;
-    }
+    return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comment`, {text});
   }
 
   likePost(postLiked: boolean, postId: string): Observable<Post> {
-    const userId = this.authService.userId;
-    if (userId) {
-      const like = Number(postLiked);
-      return this.http.post<Post>(`${environment.apiUrl}/posts/${postId}/like`, {userId, like});
-    } else {
-      return EMPTY;
-    }
+    return this.http.post<Post>(`${environment.apiUrl}/posts/${postId}/like`, {like: Number(postLiked)});
   }
 
   completePostInfos(post: Post): Post {
