@@ -1,65 +1,17 @@
 @use '@angular/material' as mat;
 @import "src/_material-theme.scss";
-
-mat-form-field {
-    width: 90%;
-}
+@import "../auth-form.scss";
 
 .login-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    .main-form {
+        max-width: 500px;
+    }
 
-.main-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 500px;
-    width: 100%;
-}
-
-.form-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.form-card {
-    margin: 20px 0;
-}
-
-mat-card-actions {
-    text-align: center;
-}
-
-.main-form {
-    padding-bottom: 30px;
-    position: relative;
-}
-
-.loading {
-    position: absolute;
-    top: -10px;
-    bottom: -10px;
-    left: -10px;
-    right: -10px;
-    height: inherit;
-    z-index: 10;
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.error-text {
-    color: mat.get-color-from-palette($groupomania-front-warn, default);
-}
-
-.error-box {
-    padding: 16px;
-    width: 300px;
-    color: mat.get-color-from-palette($groupomania-front-warn, default);
-    background-color: mat.get-color-from-palette($groupomania-front-accent, default);
+    mat-form-field {
+        width: 90%;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
 }
