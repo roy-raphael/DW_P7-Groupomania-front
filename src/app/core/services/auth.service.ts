@@ -65,6 +65,8 @@ export class AuthService {
         if (this._redirectedToLogin && this.currentRouteRequiringAuth !== "") {
           this._redirectedToLogin = false;
           this.router.navigate([this.currentRouteRequiringAuth]);
+        } else {
+          this.router.navigate(['']);
         }
       }),
       catchError(error => {
