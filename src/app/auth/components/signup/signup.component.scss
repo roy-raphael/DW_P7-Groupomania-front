@@ -1,0 +1,41 @@
+@use '@angular/material' as mat;
+@import "src/_material-theme.scss";
+@import "../auth-form.scss";
+
+.signup-wrapper {
+    .main-form {
+        max-width: 1000px;
+    }
+    
+    .form-group {
+        width: 95%;
+    }
+
+    mat-form-field {
+        width: 48%;
+    }
+
+    .error-text {
+        color: mat.get-color-from-palette($groupomania-front-warn, default);
+        margin-bottom: 20px;
+    }
+}
+
+// styles for mobile
+// .signup-wrapper {
+//     .main-form {
+//         max-width: 500px;
+//     }
+
+//     .form-group {
+//         width: 90%;
+//     }
+    
+//     mat-form-field {
+//         width: 100%;
+//     }
+    
+//     .form-row {
+//         flex-direction: column;
+//     }
+// }

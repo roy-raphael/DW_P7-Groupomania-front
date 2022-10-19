@@ -1,1 +1,63 @@
-<p>signup works!</p>
+<div class="signup-wrapper auth-form">
+    <mat-card [formGroup]="mainForm" class="main-form">
+        <mat-card-title class="form-title">Inscription</mat-card-title>
+        <div class="form-group" formGroupName="personalInfo">
+            <div class="form-row">
+                <mat-form-field appearance="fill">
+                    <mat-label>Prénom</mat-label>
+                    <input type="text" matInput formControlName="firstName">
+                    <mat-error>Ce champ est requis</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nom</mat-label>
+                    <input type="text" matInput formControlName="lastName">
+                    <mat-error>Ce champ est requis</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-row">
+                <mat-form-field appearance="fill">
+                    <mat-label>Nom d'utilisateur</mat-label>
+                    <input type="text" matInput formControlName="username">
+                    <mat-error>Ce champ est requis</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="form-group" [formGroup]="emailForm">
+            <div class="form-row">
+                <mat-form-field appearance="fill">
+                    <mat-label>Adresse mail</mat-label>
+                    <input type="text" matInput formControlName="email">
+                    <mat-error>{{ getFormControlErrorText(emailCtrl) }}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Confirmer votre adresse mail</mat-label>
+                    <input type="text" matInput formControlName="confirm">
+                    <mat-error>{{ getFormControlErrorText(confirmEmailCtrl) }}</mat-error>
+                </mat-form-field>
+            </div>
+            <p class="error-text" *ngIf="showEmailError$ | async">Les deux adresses mail ne correspondent pas</p>
+        </div>
+        <div class="form-group" [formGroup]="loginInfoForm">
+            <div class="form-row">
+                <mat-form-field appearance="fill">
+                    <mat-label>Mot de passe</mat-label>
+                    <input [type]="showPassword ? 'text' : 'password'" matInput formControlName="password">
+                    <mat-icon matSuffix (click)="togglePasswordVisibility()">{{showPassword?'visibility_off':'visibility'}}</mat-icon>
+                    <mat-error>{{ getFormControlErrorText(passwordCtrl) }}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Confirmer votre mot de passe</mat-label>
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" matInput formControlName="confirmPassword">
+                    <mat-icon matSuffix (click)="toggleConfirmPasswordVisibility()">{{showConfirmPassword?'visibility_off':'visibility'}}</mat-icon>
+                    <mat-error>Ce champ est requis</mat-error>
+                </mat-form-field>
+            </div>
+            <p class="error-text" *ngIf="showPasswordError$ | async">Les deux mots de passe ne correspondent pas</p>
+        </div>
+        <mat-card-actions>
+            <button [disabled]="!mainForm.valid" mat-flat-button color="primary" (click)="onSubmitForm()">S'inscrire</button>
+        </mat-card-actions>
+        <mat-spinner *ngIf="loading" color="primary" mode="indeterminate"></mat-spinner>
+        <p *ngIf="error" class="error-box">{{ error }}</p>
+    </mat-card>
+</div>
