@@ -1,17 +1,7 @@
-@use '@angular/material' as mat;
-@import "src/_material-theme.scss";
-@import "../auth-form.scss";
+@import "src/_forms.scss";
 
 .login-wrapper {
-    .main-form {
+    .mat-card-container {
         max-width: 500px;
-    }
-
-    mat-form-field {
-        width: 90%;
-    }
-    
-    .form-row {
-        flex-direction: column;
     }
 }

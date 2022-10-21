@@ -51,7 +51,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/_material-theme.scss"
+              "src/_material-theme.scss",
+              "src/_forms.scss"
             ],
             "scripts": []
           },
@@ -120,7 +121,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/_material-theme.scss"
+              "src/_material-theme.scss",
+              "src/_forms.scss"
             ],
             "scripts": []
           }

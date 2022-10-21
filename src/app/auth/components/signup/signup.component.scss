@@ -1,18 +1,19 @@
 @use '@angular/material' as mat;
 @import "src/_material-theme.scss";
-@import "../auth-form.scss";
+@import "src/_forms.scss";
 
+// TODO styles for desktop : if screen size is big only !
 .signup-wrapper {
-    .main-form {
+    .mat-card-container {
         max-width: 1000px;
-    }
-    
-    .form-group {
-        width: 95%;
     }
 
     mat-form-field {
         width: 48%;
+    }
+    
+    .form-row {
+        flex-direction: row;
     }
 
     .error-text {
@@ -21,21 +22,17 @@
     }
 }
 
-// styles for mobile
+// TODO styles for mobile : default
 // .signup-wrapper {
-//     .main-form {
+//     .mat-card-container {
 //         max-width: 500px;
 //     }
-
-//     .form-group {
-//         width: 90%;
-//     }
     
-//     mat-form-field {
+//     mat-form-field { // already set as default
 //         width: 100%;
 //     }
     
-//     .form-row {
+//     .form-row { // already set as default
 //         flex-direction: column;
 //     }
 // }
