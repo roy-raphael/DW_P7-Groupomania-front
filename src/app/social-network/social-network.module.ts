@@ -14,6 +14,7 @@ import { PostUnitaryComponent } from './components/post-unitary/post-unitary.com
 import { PostResolver } from './resolvers/post.resolver';
 import { PageNotFoundModule } from '../page-not-found/page-not-found.module';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { PostFormComponent } from './components/post-form/post-form.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     PostListComponent,
     PostComponent,
     PostUnitaryComponent,
-    CommentsComponent
+    CommentsComponent,
+    PostFormComponent,
   ],
   imports: [
     CommonModule,

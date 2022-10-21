@@ -1,0 +1,52 @@
+<div class="post-form-wrapper form">
+    <mat-spinner *ngIf="loadingPost" color="primary" mode="indeterminate"></mat-spinner>
+    <mat-card *ngIf="isAddMode || !loadingPost" [formGroup]="mainForm" class="main-form" [ngClass]="{ 'no-margin-top': isAddMode }">
+        <div class="form-row">
+            <mat-form-field appearance="fill">
+                <mat-label>Que voulez-vous publier ?</mat-label>
+                <textarea matInput
+                        cdkTextareaAutosize
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"
+                        [formControl]="textCtrl"></textarea>
+          </mat-form-field>
+        </div>
+        <figure *ngIf="originalPostImageUrl && !file">
+            <img mat-card-image [src]="originalPostImageUrl" [alt]="originalPostImageAlt ? originalPostImageAlt : 'Image du post'">
+            <figcaption *ngIf="originalPostImageAlt">{{"Description : " + originalPostImageAlt}}</figcaption>
+        </figure>
+        <div class="form-actions">
+            <div class="image-group">
+                <input class="file-input" type="file" [formControl]="imageCtrl" (input)="handleFileInputEventTarget($event.target)" #fileUpload>
+                <div class="form-row">
+                    <div class="file-upload">
+                        <button *ngIf="!file && !originalPostImageUrl" [disabled]="loading" mat-mini-fab color="primary" class="upload-btn"
+                            (click)="fileUpload.click()">
+                            <mat-icon>attach_file</mat-icon>
+                        </button>
+                        <button *ngIf="file || originalPostImageUrl" [disabled]="loading" mat-mini-fab color="primary" class="cancel-btn"
+                            (click)="removeFile()">
+                            <mat-icon>delete_forever</mat-icon>
+                        </button>
+                        <span class="file-text" [ngClass]="{ 'disabled-text': loading }">
+                            {{file ? file.name : (originalPostImageUrl ? originalPostImageName : "Aucune image jointe.")}}
+                        </span>
+                    </div>
+                    <mat-form-field appearance="fill" *ngIf="file">
+                        <mat-label>Description image</mat-label>
+                        <input type="text" matInput [formControl]="imageAltCtrl">
+                        <mat-error>Ce champ est requis</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <mat-card-actions>
+                <button routerLink=".." *ngIf="!isAddMode" [disabled]="loading" mat-flat-button color="primary">Annuler</button>
+                <button [disabled]="loading || !textCtrl.value || (file ? !imageAltCtrl.value : false)" mat-flat-button color="primary" (click)="onSubmitForm()">{{isAddMode ? "Publier" : "Editer"}}</button>
+            </mat-card-actions>
+        </div>
+        <mat-spinner *ngIf="loading" color="primary" mode="indeterminate"></mat-spinner>
+        <p *ngIf="error" class="error-box">{{ error }}</p>
+    </mat-card>
+    <p *ngIf="!isAddMode && error" class="error-box">{{ error }}</p>
+</div>

@@ -1,0 +1,65 @@
+@use '@angular/material' as mat;
+@import "src/_material-theme.scss";
+@import "src/_forms.scss";
+
+.post-form-wrapper {
+    .no-margin-top {
+        margin-top: 0px;
+    }
+
+    figure {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        
+        img {
+            margin: 0;
+            max-width: 50%;
+        }
+
+        figcaption {
+            margin-top: 16px;
+        }
+    }
+    
+    .image-group {
+        width: 100%;
+    }
+
+    .file-input {
+        display: none;
+    }
+    
+    .form-actions {
+        width: 100%;
+        display: flex;
+        
+        & .form-row {
+            gap: 15px;
+        }
+    }
+    
+    .file-text {
+        padding-left: 5px;
+    }
+    
+    .disabled-text {
+        color: graytext;
+    }
+
+    mat-card-actions {
+        display: flex;
+        align-items: flex-end;
+        padding: 0;
+        margin: 0 0 18px 20px;
+        gap: 10px;
+    }
+    
+    mat-card > mat-spinner {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+    }
+}

@@ -1,3 +1,4 @@
+<app-post-form (newPost)="onNewPost($event)"></app-post-form>
 <div infinite-scroll [infiniteScrollDistance]="infiniteScrollDistance" (scrolled)="onScrollDown()">
     <app-post *ngFor="let post of postsList" [post]="post" [isUnitaryPost]="false"
         (postCommented)="onPostCommented($event)"
@@ -6,5 +7,4 @@
         (openPost)="onOpenPost($event)"
         [commentsListChanged$]="commentsListChangedSubject.asObservable()"></app-post>
     <mat-spinner *ngIf="postsLoading"></mat-spinner>
-    <!-- <button class="load-more-button" *ngIf="!noMorePostToLoad" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more posts">+ Afficher plus</button> -->
 </div>

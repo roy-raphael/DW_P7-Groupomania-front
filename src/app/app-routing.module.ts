@@ -4,7 +4,6 @@ import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   { path: 'social-network', loadChildren: () => import('./social-network/social-network.module').then(m => m.SocialNetworkModule), canActivate: [AuthGuard] },
-  { path: 'post-form', loadChildren: () => import('./post-form/post-form.module').then(m => m.PostFormModule), canActivate: [AuthGuard] },
   { path: '404', loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)},
   { path: '**', redirectTo: 'social-network'}
 ];

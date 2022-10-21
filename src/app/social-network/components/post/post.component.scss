@@ -21,6 +21,11 @@
     }
 }
 
+.post-text {
+    // use white-space:pre-wrap to display correctly special characters (like \n or \t)
+    white-space: pre-wrap;
+}
+
 .post-content {
     // height for the post text ellipsis (ngx-ellipsis)
     max-height: 6.5rem;

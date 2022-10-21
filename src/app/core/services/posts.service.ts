@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Comment } from '../models/comment.model';
 import { Post } from '../models/post.model';
@@ -31,6 +31,22 @@ export class PostsService {
 
   getComments(postId: string, before?: Date): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${environment.apiUrl}/posts/${postId}/comments?limit=${GET_COMMENTS_LIMIT}${before ? "&before=" + before : ""}`);
+  }
+
+  createPost(text: string): Observable<Post> {
+    return this.http.post<Post>(`${environment.apiUrl}/posts`, {text});
+  }
+
+  createPostWithImage(data: FormData): Observable<Post> {
+    return this.http.post<Post>(`${environment.apiUrl}/posts`, data);
+  }
+
+  modifyPost(postId: string, text: string, removeImage?: boolean): Observable<Post> {
+    return this.http.put<Post>(`${environment.apiUrl}/posts/${postId}`, removeImage ? {text, removeImage} : {text});
+  }
+
+  modifyPostWithImage(postId: string, data: FormData): Observable<Post> {
+    return this.http.put<Post>(`${environment.apiUrl}/posts/${postId}`, data);
   }
 
   addNewComment(text: string, postId: string): Observable<Comment> {

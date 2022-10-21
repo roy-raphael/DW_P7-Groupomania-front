@@ -46,6 +46,11 @@ export class PostListComponent implements OnInit {
     ).subscribe();
   }
 
+  onNewPost(post: Post) {
+    this.postsList.unshift(this.postsService.completePostInfos(post))
+    this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
+  }
+
   onNewPosts(posts: Post[]): void {
     if (posts.length > 0) {
       posts.forEach((post: Post) => this.postsList.push(this.postsService.completePostInfos(post)));

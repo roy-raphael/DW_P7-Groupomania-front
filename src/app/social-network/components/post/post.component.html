@@ -15,7 +15,7 @@
                 <mat-icon>visibility</mat-icon>
                 <span>Voir la publication</span>
             </button>
-            <button mat-menu-item *ngIf="post.canEditAndDelete">
+            <button mat-menu-item *ngIf="post.canEditAndDelete" [routerLink]="'/social-network/' + post.id + '/edit'">
                 <mat-icon>edit</mat-icon>
                 <span>Editer la publication</span>
             </button>
@@ -28,8 +28,7 @@
     <mat-card-content>
         <img mat-card-image *ngIf="post.imageUrl as imageUrl" [src]="imageUrl" [alt]="post.imageAlt ? post.imageAlt : 'Image du post'">
         <!-- use ngx-ellipsis to apply a text ellipsis (height defined in CSS), and to tell the component if it has been truncated -->
-        <!-- use innerText attribute to display correctly special characters (like \n or \r) -->
-        <div #ellipsisRef ellipsis (ellipsis-change)="truncated($event)" [ngClass]="{ 'post-content': !seeMore }" [innerText]="post.text"></div>
+        <div class="post-text" #ellipsisRef ellipsis (ellipsis-change)="truncated($event)" [ngClass]="{ 'post-content': !seeMore }">{{post.text}}</div>
         <span class="see-more-button" *ngIf="seeMoreButton" (click)="showComplete()">Voir plus</span>
         <span class="see-less-button" *ngIf="seeMore" (click)="showTruncated()">Voir moins</span>
     </mat-card-content>
