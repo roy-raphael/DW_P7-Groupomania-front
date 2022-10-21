@@ -5,6 +5,7 @@ import { catchError, map, Observable, tap } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { confirmEqualValidator } from '../../validators/confirm-equal.validator';
 import { patternValidator } from '../../validators/pattern.validator';
+import { sanityCheckValidator } from '../../validators/sanity-check.validator';
 
 const PASSWORD_MIN_LENGTH : number = 8;
 const PASSWORD_MAX_LENGTH : number = 100;
@@ -12,6 +13,10 @@ const PASSWORD_MIN_LOWERCASE_LETTERS : number = 2;
 const PASSWORD_MIN_UPPERCASE_LETTERS : number = 2;
 const PASSWORD_MIN_NUMBERS : number = 2;
 const PASSWORD_MIN_SPECIAL_CHARACTERS : number = 2;
+const EMAIL_REGEXP = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+const PASSWORD_AUTHORIZED_CHARACTERS = /[^\w\d `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g;
+const PASSWORD_SPECIAL_CHARACTERS = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g;
+const PASSWORD_AUTHORIZED_SPE_CHAR = " `!@#$%^&*()_+-=[]{};':\"\\|,.<>/?~";
 
 @Component({
   selector: 'app-signup',
@@ -70,7 +75,7 @@ export class SignupComponent implements OnInit {
       username: this.usernameCtrl
     });
     this.emailCtrl = this.formBuilder.control('', [Validators.required, Validators.email,
-      Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')]);
+      Validators.pattern(EMAIL_REGEXP)]);
     this.confirmEmailCtrl = this.formBuilder.control('', [Validators.required, Validators.email]);
     this.emailForm = this.formBuilder.group({
       email: this.emailCtrl,
@@ -86,14 +91,16 @@ export class SignupComponent implements OnInit {
          Validators.minLength(PASSWORD_MIN_LENGTH),
          // 3. Has a maximum length
          Validators.maxLength(PASSWORD_MAX_LENGTH),
-         // 4. check whether the entered password has enough lower-case letters
+         // 5. check if the password has forbidden characters
+         sanityCheckValidator(PASSWORD_AUTHORIZED_CHARACTERS),
+         // 5. check whether the entered password has enough lower-case letters
          patternValidator(/[a-z]/g, PASSWORD_MIN_LOWERCASE_LETTERS, { hasSmallCase: true }),
-         // 5. check whether the entered password has enough upper-case letters
+         // 6. check whether the entered password has enough upper-case letters
          patternValidator(/[A-Z]/g, PASSWORD_MIN_UPPERCASE_LETTERS, { hasCapitalCase: true }),
-         // 6. check whether the entered password has enough numbers
+         // 7. check whether the entered password has enough numbers
          patternValidator(/\d/g, PASSWORD_MIN_NUMBERS, { hasNumber: true }),
-         // 7. check whether the entered password has enough special characters
-         patternValidator(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g, PASSWORD_MIN_SPECIAL_CHARACTERS, { hasSpecialCharacters: true })]);
+         // 8. check whether the entered password has enough special characters
+         patternValidator(PASSWORD_SPECIAL_CHARACTERS, PASSWORD_MIN_SPECIAL_CHARACTERS, { hasSpecialCharacters: true })]);
     this.confirmPasswordCtrl = this.formBuilder.control('', Validators.required);
     this.loginInfoForm = this.formBuilder.group({
       password: this.passwordCtrl,
@@ -170,6 +177,8 @@ export class SignupComponent implements OnInit {
       return `Ce mot de passe ne contient pas assez de caractères (min. ${PASSWORD_MIN_LENGTH})`;
     } else if (ctrl.hasError('maxlength')) {
       return `Ce mot de passe contient trop de caractères (max. ${PASSWORD_MAX_LENGTH})`;
+    } else if (ctrl.hasError('hasForbiddenCharacter')) {
+      return `Ce mot de passe contient au moins un caractère interdit (uniquement lettres, chiffres, espaces et ${PASSWORD_AUTHORIZED_SPE_CHAR})`;
     } else if (ctrl.hasError('hasSmallCase')) {
       return `Ce mot de passe ne contient pas assez de lettres minuscules (min. ${PASSWORD_MIN_LOWERCASE_LETTERS})`;
     } else if (ctrl.hasError('hasCapitalCase')) {
