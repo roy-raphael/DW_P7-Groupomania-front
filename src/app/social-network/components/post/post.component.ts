@@ -37,6 +37,7 @@ export class PostComponent implements OnInit {
     if (this.post != null) {
       this.hasBeenEdited = this.post.createdAt !== this.post.updatedAt;
       this.showComments = this.post._count.comments > 0 && this.post.comments.length > 0;
+      this.noMoreCommentToLoad = this.post.comments.length >= this.post._count.comments;
     }
     // Calling detectChanges here is the workaround for not having the error "ExpressionChangedAfterItHasBeenCheckedError" (for seeMoreButton)
     this.cdr.detectChanges();
