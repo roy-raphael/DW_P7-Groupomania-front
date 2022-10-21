@@ -1,13 +1,8 @@
 @use '@angular/material' as mat;
 @import "src/_material-theme.scss";
 
-ul {
-    list-style: none;
-}
-
-li {
-    display: inline-block;
-    margin-right: 20px;
+.home-button {
+    margin-left: -10px;
 }
 
 .connection-menu {
