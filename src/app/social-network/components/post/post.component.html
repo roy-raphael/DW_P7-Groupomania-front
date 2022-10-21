@@ -1,4 +1,5 @@
-<mat-card class="card-with-dots-button post-card">
+<mat-card class="post-card">
+    <mat-spinner class="delete-loading-spinner" *ngIf="deleteLoading" color="primary" mode="indeterminate"></mat-spinner>
     <mat-card-header>
         <mat-card-title>
             <span highlight>{{ { firstName: post.author.firstName, lastName: post.author.surName, pseudo: post.author.pseudo } | username }}</span>
@@ -7,11 +8,11 @@
             <span>{{ post.createdAt | timeAgo }}</span>
             <span *ngIf="hasBeenEdited"> (dernière modification : {{ post.updatedAt | timeAgo }})</span>
         </mat-card-subtitle>
-        <button mat-icon-button *ngIf="post.canEditAndDelete || !isUnitaryPost" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <button [disabled]="deleteLoading" mat-icon-button *ngIf="post.canEditAndDelete || !isUnitaryPost" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngIf="!isUnitaryPost" (click)="viewPost()">
+            <button mat-menu-item *ngIf="!isUnitaryPost" (click)="onViewPostClicked()">
                 <mat-icon>visibility</mat-icon>
                 <span>Voir la publication</span>
             </button>
@@ -19,7 +20,7 @@
                 <mat-icon>edit</mat-icon>
                 <span>Editer la publication</span>
             </button>
-            <button mat-menu-item *ngIf="post.canEditAndDelete">
+            <button mat-menu-item *ngIf="post.canEditAndDelete" (click)="onDeletePostClicked()">
                 <mat-icon>delete</mat-icon>
                 <span>Supprimer la publication</span>
             </button>
@@ -34,18 +35,19 @@
     </mat-card-content>
     <mat-card-actions>
         <div class="actions-bar">
-            <button class="comments-button" mat-flat-button *ngIf="post._count.comments ? (post._count.comments !== 0) : false" (click)="hideOrShowComments()">
+            <button [disabled]="deleteLoading" class="comments-button" mat-flat-button *ngIf="post._count.comments ? (post._count.comments !== 0) : false" (click)="hideOrShowComments()">
                 {{(post._count.comments > 1) ? (post._count.comments + " commentaires ") : "1 commentaire "}}
                 <mat-icon>{{ showComments ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</mat-icon>
             </button>
             <div class="likes">
                 <p>{{post.likesNumber ? post.likesNumber : 0}}</p>
-                <button class="like-button" mat-icon-button (click)="onLike()" [attr.aria-label]="post.userLiked ? 'Button to unlike the post' : 'Button to like the post'">
-                    <mat-icon color="primary" [ngClass]="{ 'material-icons-outlined': !post.userLiked }">thumb_up</mat-icon>
+                <button [disabled]="deleteLoading" class="like-button" mat-icon-button (click)="onLike()" [attr.aria-label]="post.userLiked ? 'Button to unlike the post' : 'Button to like the post'">
+                    <mat-icon [color]="deleteLoading ? 'accent' : 'primary'" [ngClass]="{ 'material-icons-outlined': !post.userLiked }">thumb_up</mat-icon>
                 </button>
             </div>
         </div>
-        <app-comments [comments]="post.comments"
+        <app-comments [disabled]="deleteLoading"
+            [comments]="post.comments"
             [showComments]="showComments"
             [loading]="commentsLoading"
             [noMoreCommentToLoad]="noMoreCommentToLoad"

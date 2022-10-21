@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { map, Subject, take, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { catchError, map, Subject, take, tap } from 'rxjs';
 import { Comment } from 'src/app/core/models/comment.model';
 import { Post } from 'src/app/core/models/post.model';
 import { PostsService } from 'src/app/core/services/posts.service';
@@ -13,8 +13,10 @@ import { PostsService } from 'src/app/core/services/posts.service';
 export class PostUnitaryComponent implements OnInit {
   post!: Post;
   private _commentsListChangedSubject: Subject<string> = new Subject();
+  private _deletePostErrorSubject: Subject<string> = new Subject();
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private postsService: PostsService) {}
 
   ngOnInit(): void {
@@ -27,6 +29,10 @@ export class PostUnitaryComponent implements OnInit {
 
   get commentsListChangedSubject() {
     return this._commentsListChangedSubject;
+  }
+
+  get deletePostErrorSubject() {
+    return this._deletePostErrorSubject;
   }
 
   onPostCommented(postCommented: { comment: string, postId: string }) {
@@ -67,6 +73,18 @@ export class PostUnitaryComponent implements OnInit {
           }
         }
       }),
+    ).subscribe();
+  }
+
+  onDeletePost(postId: string) {
+    this.postsService.deletePost(postId).pipe(
+      tap(() => {
+        this.router.navigate(['']);
+      }),
+      catchError(error => {
+        this._deletePostErrorSubject.next(postId);
+        throw error;
+      })
     ).subscribe();
   }
 }

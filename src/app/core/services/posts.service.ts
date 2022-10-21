@@ -49,6 +49,10 @@ export class PostsService {
     return this.http.put<Post>(`${environment.apiUrl}/posts/${postId}`, data);
   }
 
+  deletePost(postId: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/posts/${postId}`);
+  }
+
   addNewComment(text: string, postId: string): Observable<Comment> {
     return this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comments`, {text});
   }

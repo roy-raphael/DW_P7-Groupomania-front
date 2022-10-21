@@ -4,7 +4,9 @@
         (postCommented)="onPostCommented($event)"
         (postLiked)="onPostLiked($event)"
         (loadComments)="onLoadComments($event)"
-        (openPost)="onOpenPost($event)"
-        [commentsListChanged$]="commentsListChangedSubject.asObservable()"></app-post>
+        (viewPost)="onViewPost($event)"
+        (deletePost)="onDeletePost($event)"
+        [commentsListChanged$]="commentsListChangedSubject.asObservable()"
+        [deletePostError$]="deletePostErrorSubject.asObservable()"></app-post>
     <mat-spinner *ngIf="postsLoading"></mat-spinner>
 </div>

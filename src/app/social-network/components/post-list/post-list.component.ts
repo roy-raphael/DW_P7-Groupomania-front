@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Subject, take, tap } from 'rxjs';
+import { catchError, map, Subject, take, tap } from 'rxjs';
 import { Comment } from 'src/app/core/models/comment.model';
 import { Post } from 'src/app/core/models/post.model';
 import { PostsService } from 'src/app/core/services/posts.service';
@@ -14,6 +14,7 @@ import { PostsService } from 'src/app/core/services/posts.service';
 export class PostListComponent implements OnInit {
   postsList: Post[] = [];
   private _commentsListChangedSubject: Subject<string> = new Subject();
+  private _deletePostErrorSubject: Subject<string> = new Subject();
   private _lastPostDate!: Date;
   noMorePostToLoad: boolean = false;
   postsLoading: boolean = false;
@@ -36,6 +37,10 @@ export class PostListComponent implements OnInit {
 
   get commentsListChangedSubject() {
     return this._commentsListChangedSubject;
+  }
+
+  get deletePostErrorSubject() {
+    return this._deletePostErrorSubject;
   }
 
   loadMore() {
@@ -118,8 +123,24 @@ export class PostListComponent implements OnInit {
     ).subscribe();
   }
 
-  onOpenPost(postId: string) {
+  onViewPost(postId: string) {
     this.router.navigate([postId], { relativeTo: this.route });
+  }
+
+  onDeletePost(postId: string) {
+    this.postsService.deletePost(postId).pipe(
+      tap(() => {
+        const index: number = this.postsList.findIndex(post => post.id === postId);
+        if (index > -1) {
+          this.postsList.splice(index, 1);
+        }
+        this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
+      }),
+      catchError(error => {
+        this._deletePostErrorSubject.next(postId);
+        throw error;
+      })
+    ).subscribe();
   }
 
   onScrollDown(): void {

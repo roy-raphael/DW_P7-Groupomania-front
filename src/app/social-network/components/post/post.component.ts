@@ -14,18 +14,22 @@ export class PostComponent implements OnInit {
   @ViewChild(EllipsisDirective) ellipsisRef!: EllipsisDirective; // aim : tell the directive (from the template) to update
   @Input() post!: Post;
   @Input() commentsListChanged$!: Observable<string>;
+  @Input() deletePostError$!: Observable<string>;
   @Input() isUnitaryPost!: boolean;
   @Output() postCommented = new EventEmitter<{ comment: string, postId: string }>();
   @Output() postLiked = new EventEmitter<{ like: boolean, postId: string }>();
   @Output() loadComments = new EventEmitter<{ before?: Date, postId: string }>();
-  @Output() openPost = new EventEmitter<string>();
+  @Output() viewPost = new EventEmitter<string>();
+  @Output() deletePost = new EventEmitter<string>();
   private commentsListChangedSubscription!: Subscription;
+  private deletePostErrorSubscription!: Subscription;
   hasBeenEdited: boolean = false;
   seeMore: boolean = false; // If we want to display the truncated part of the text (-> true)
   seeMoreButton: boolean = false; // If we want to display a "See more" button (-> true)
   noMoreCommentToLoad: boolean = true;
   showComments: boolean = false;
   commentsLoading: boolean = false;
+  deleteLoading: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -44,10 +48,19 @@ export class PostComponent implements OnInit {
         this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });
+    this.deletePostErrorSubscription = this.deletePostError$.subscribe((postId: string) => {
+      if (postId === this.post.id) {
+        this.deleteLoading = false;
+        console.error("Error during Post Delete");
+        // TODO display error pop-up
+        this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
+      }
+    });
   }
 
   ngOnDestroy() {
     this.commentsListChangedSubscription.unsubscribe();
+    this.deletePostErrorSubscription.unsubscribe();
   }
 
   // Saves if the text has been truncated or not
@@ -97,7 +110,12 @@ export class PostComponent implements OnInit {
     this.showComments = !this.showComments;
   }
 
-  viewPost() {
-    this.openPost.emit(this.post.id);
+  onViewPostClicked() {
+    this.viewPost.emit(this.post.id);
+  }
+
+  onDeletePostClicked() {
+    this.deleteLoading = true;
+    this.deletePost.emit(this.post.id);
   }
 }

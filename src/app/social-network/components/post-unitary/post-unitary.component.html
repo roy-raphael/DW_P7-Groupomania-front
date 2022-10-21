@@ -2,4 +2,6 @@
     (postCommented)="onPostCommented($event)"
     (postLiked)="onPostLiked($event)"
     (loadComments)="onLoadComments($event)"
-    [commentsListChanged$]="commentsListChangedSubject.asObservable()"></app-post>
+    (deletePost)="onDeletePost($event)"
+    [commentsListChanged$]="commentsListChangedSubject.asObservable()"
+    [deletePostError$]="deletePostErrorSubject.asObservable()"></app-post>
