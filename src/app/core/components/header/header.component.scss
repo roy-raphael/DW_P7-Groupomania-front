@@ -1,5 +1,10 @@
 @use '@angular/material' as mat;
 @import "src/_material-theme.scss";
+.toolbar {
+    position: sticky;
+    top: 0; /* Sets the sticky toolbar to be on top */
+    z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}
 
 .home-button {
     margin-left: -10px;
