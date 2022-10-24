@@ -8,7 +8,6 @@ import { PostsResolver } from './resolvers/posts.resolver';
 
 const routes: Routes = [
   { path: '', component: PostListComponent, resolve: { posts: PostsResolver } },
-  { path: 'new', component: PostFormComponent },
   { path: ':id/edit', component: PostFormComponent },
   { path: ':id', component: PostUnitaryComponent, resolve: { post: PostResolver } },
 ];

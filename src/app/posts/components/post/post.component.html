@@ -16,7 +16,7 @@
                 <mat-icon>visibility</mat-icon>
                 <span>Voir la publication</span>
             </button>
-            <button mat-menu-item *ngIf="post.canEditAndDelete" [routerLink]="'/social-network/' + post.id + '/edit'">
+            <button mat-menu-item *ngIf="post.canEditAndDelete" [routerLink]="'/posts/' + post.id + '/edit'">
                 <mat-icon>edit</mat-icon>
                 <span>Editer la publication</span>
             </button>
