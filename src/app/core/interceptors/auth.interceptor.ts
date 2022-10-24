@@ -3,13 +3,15 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError  } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthService } from '../services/auth.service';
+import { MessageHandlingService } from '../services/message-handling.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private accessToken$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              private messagehandlingService: MessageHandlingService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getAccessToken();
@@ -19,9 +21,9 @@ export class AuthInterceptor implements HttpInterceptor {
       const modifiedReq = this.addTokenHeader(req, token);
       return next.handle(modifiedReq).pipe(
         catchError(error => {
+          this.messagehandlingService.logError(error, "AuthInterceptor:intercept", modifiedReq.url);
           if (error instanceof HttpErrorResponse) {
             if (error.status === 401) {
-              this.logRequestError(<HttpErrorResponse>error, modifiedReq.url);
               this.authService.deleteAccessToken();
               return this.refreshAndHandle(modifiedReq, next);
             } else if (error.status === 404) {
@@ -50,8 +52,7 @@ export class AuthInterceptor implements HttpInterceptor {
           }),
           catchError((error) => {
             this.isRefreshing = false;
-            if (error instanceof HttpErrorResponse) this.logRequestError(<HttpErrorResponse>error, request.url);
-            else console.log("Error when refreshing : " + error.message);
+            this.messagehandlingService.logError(error, "AuthInterceptor:refreshAndHandle", request.url);
             console.log("User disconnected");
             this.authService.redirectToLogin();
             return throwError(() => error);
@@ -72,19 +73,5 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private addTokenHeader(request: HttpRequest<any>, token: string): HttpRequest<any> {
     return request.clone({ headers: request.headers.set('Authorization', 'Bearer ' + token) });
-  }
-
-  private logRequestError(error: HttpErrorResponse, requestUrl: string): void {
-    const httpError = error.error;
-    if (httpError === null || httpError === undefined) {
-      console.log("HTTP error (for URL " + requestUrl + ") : " + error.message);
-    } else {
-      const backendError = httpError.error;
-      if (backendError === null || backendError === undefined) {
-        console.log("HTTP error (for URL " + requestUrl + ") : " + error.message);
-      } else {
-        console.log("HTTP error from backend (for URL " + requestUrl + ") : " + backendError.message);
-      }
-    }
   }
 }

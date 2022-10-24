@@ -36,20 +36,12 @@ export class AuthService {
   signup(email: string, password: string, firstName: string, surName: string, pseudo: string): Observable<{message: string}> {
     var body: {email: string, password: string, firstName: string, surName: string, pseudo?: string} = {email, password, firstName, surName, pseudo};
     if (pseudo === '') delete body.pseudo;
-    return this._http.post<{message: string}>(`${environment.apiUrl}/auth/signup`, body).pipe(
+    const url = `${environment.apiUrl}/auth/signup`;
+    return this._http.post<{message: string}>(url, body).pipe(
       take(1),
-      tap(() => {
-        console.log('User created !');
-      }),
       catchError(error => {
         this.resetAuthInfos();
-        if (error instanceof HttpErrorResponse) {
-          const httpError = error.error;
-          const errorMessage = (httpError != null && httpError.error != null && httpError.error.message != null) ? httpError.error.message : error.message;
-          console.log("Error during signup : " + errorMessage);
-        } else {
-          console.log('Error (non-HTTP) during signup');
-        }
+        this.messagehandlingService.logError(error, "AuthService:signup", url);
         throw error;
       })
     );
@@ -58,6 +50,7 @@ export class AuthService {
   login(email: string, password: string): Observable<{user: User, accessToken: string, refreshToken: string}> {
     const refreshToken = this.getRefreshToken();
     const body: {email: string, password: string, refreshToken?: string} = refreshToken ? {email, password, refreshToken} : {email, password};
+    const url = `${environment.apiUrl}/auth/login`;
     return this._http.post<{user: User, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/login`, body).pipe(
       take(1),
       tap(loginResponse => {
@@ -73,13 +66,7 @@ export class AuthService {
       }),
       catchError(error => {
         this.resetAuthInfos();
-        if (error instanceof HttpErrorResponse) {
-          const httpError = error.error;
-          const errorMessage = (httpError != null && httpError.error != null && httpError.error.message != null) ? httpError.error.message : error.message;
-          console.log("Error during login : " + errorMessage);
-        } else {
-          console.log('Error (non-HTTP) during login');
-        }
+        this.messagehandlingService.logError(error, "AuthService:login", url);
         throw error;
       })
     );
@@ -89,19 +76,14 @@ export class AuthService {
     const refreshToken = this.getRefreshToken();
     this.resetAuthInfos();
     if (refreshToken) {
-      this._http.post<{}>(`${environment.apiUrl}/auth/logout`, {refreshToken}).pipe(
+      const url = `${environment.apiUrl}/auth/logout`;
+      this._http.post<{}>(url, {refreshToken}).pipe(
         take(1),
         tap(() => {
           console.log('Successfully logged out of the backend');
         }),
         catchError(error => {
-          if (error instanceof HttpErrorResponse) {
-            const httpError = error.error;
-            const errorMessage = (httpError != null && httpError.error != null && httpError.error.message != null) ? httpError.error.message : error.message;
-            console.log("Error during logout : " + errorMessage);
-          } else {
-            console.log('Error (non-HTTP) during logout');
-          }
+          this.messagehandlingService.logError(error, "AuthService:logOut", url);
           throw error;
         })
       ).subscribe();
@@ -109,7 +91,8 @@ export class AuthService {
   }
   
   refreshTokenObservable(token: string): Observable<{user: User, accessToken: string, refreshToken: string}> {
-    return this._http.post<{user: User, accessToken: string, refreshToken: string}>(`${environment.apiUrl}/auth/refresh`, {refreshToken: token}).pipe(
+    const url = `${environment.apiUrl}/auth/refresh`;
+    return this._http.post<{user: User, accessToken: string, refreshToken: string}>(url, {refreshToken: token}).pipe(
       tap(refreshResponse => {
         this.setUser(refreshResponse.user);
         this.setAccessToken(refreshResponse.accessToken);
@@ -117,14 +100,8 @@ export class AuthService {
       }),
       catchError(error => {        
         this.resetAuthInfos();
+        this.messagehandlingService.logError(error, "AuthService:refreshTokenObservable", url);
         this.messagehandlingService.displayError("L'utilisateur a dû être déconnecté : veuillez vous reconnecter.");
-        if (error instanceof HttpErrorResponse) {
-          const httpError = error.error;
-          const errorMessage = (httpError != null && httpError.error != null && httpError.error.message != null) ? httpError.error.message : error.message;
-          console.log("Error during refresh : " + errorMessage);
-        } else {
-          console.log('Error (non-HTTP) during refresh');
-        }
         throw error;
       })
     );

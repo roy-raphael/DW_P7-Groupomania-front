@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -6,6 +7,21 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class MessageHandlingService {  
   constructor(private _snackBar: MatSnackBar) {}
+
+  logError(error: any, originFunctionName: string, requestUrl?: string): void {
+    if (error != null) {
+      if (error instanceof HttpErrorResponse) {
+        const httpError = error.error;
+        if (httpError != null && httpError.error != null && httpError.error.message != null) {
+          console.log(`Error HTTP ${error.status} from server during ${originFunctionName}${requestUrl ? " (for URL " + requestUrl + ")" : ""} : ${httpError.error.message}`);
+        } else {
+          console.log(`Error HTTP ${error.status} during ${originFunctionName}${requestUrl ? " (for URL " + requestUrl + ")" : ""} : ${error.message}`);
+        }
+      } else {
+        console.log(`Error (non-HTTP) during ${originFunctionName} : ${error.message}`);
+      }
+    }
+  }
   
   displaySuccess(message: string): void {
     this._snackBar.open(message, "fermer", {
