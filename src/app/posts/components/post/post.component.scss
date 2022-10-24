@@ -11,8 +11,15 @@
         right: 0;
     }
 
+    .mat-card-content {
+        display: flex;
+        flex-direction: column;
+    }
+
     .mat-card-image {
         margin-top: 0;
+        align-self: center;
+        width: auto;
     }
 
     mat-card-header {
