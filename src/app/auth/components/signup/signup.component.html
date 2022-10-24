@@ -59,7 +59,6 @@
                 <button [disabled]="!mainForm.valid" mat-flat-button color="primary" (click)="onSubmitForm()">S'inscrire</button>
             </mat-card-actions>
             <mat-spinner *ngIf="loading" color="primary" mode="indeterminate"></mat-spinner>
-            <p *ngIf="error" class="error-box">{{ error }}</p>
         </mat-card>
     </div>
 </div>

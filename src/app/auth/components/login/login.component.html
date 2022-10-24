@@ -18,7 +18,6 @@
                 <button [disabled]="!mainForm.valid" mat-flat-button color="primary" (click)="onSubmitForm()">Se connecter</button>
             </mat-card-actions>
             <mat-spinner *ngIf="loading" color="primary" mode="indeterminate"></mat-spinner>
-            <p *ngIf="error" class="error-box">{{ error }}</p>
             <p>Vouc n'avez pas de compte ? <a routerLink="/signup">S'inscrire</a></p>
         </mat-card>
     </div>

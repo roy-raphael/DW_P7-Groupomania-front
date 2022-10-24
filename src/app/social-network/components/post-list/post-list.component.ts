@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Subject, take, tap } from 'rxjs';
 import { Comment } from 'src/app/core/models/comment.model';
 import { Post } from 'src/app/core/models/post.model';
+import { MessageHandlingService } from 'src/app/core/services/message-handling.service';
 import { PostsService } from 'src/app/core/services/posts.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class PostListComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private cdr: ChangeDetectorRef,
-              private postsService: PostsService) { }
+              private postsService: PostsService,
+              private messagehandlingService: MessageHandlingService) { }
 
   ngOnInit(): void {}
 
@@ -75,7 +77,7 @@ export class PostListComponent implements OnInit {
   onPostLiked(postLiked: { like: boolean, postId: string }) {
     this.postsService.likePost(postLiked.like, postLiked.postId).pipe(
       tap(post => {
-        const postIndex = this.postsList.findIndex(post => post.id === postLiked.postId);
+        const postIndex = this.postsList.findIndex(postElem => postElem.id === postLiked.postId);
         if (postIndex !== -1) {
           const updatedPost = this.postsService.completePostInfos(post);
           this.postsList[postIndex].likes = updatedPost.likes;
@@ -83,6 +85,7 @@ export class PostListComponent implements OnInit {
           this.postsList[postIndex].userLiked = updatedPost.userLiked;
           this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
         } else {
+          this.messagehandlingService.displayError("Erreur pendant le like/unlike d'une publication.");
           console.error("Error during PostListComponent:onPostLiked : no post found in the list with ID " + postLiked.postId);
         }
       })
@@ -100,6 +103,7 @@ export class PostListComponent implements OnInit {
             this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
           }
         } else {
+          this.messagehandlingService.displayError("Erreur pendant la création d'un commentaire.");
           console.error("Error during PostListComponent:onPostCommented : no post found in the list with ID " + postCommented.postId);
         }
       })
@@ -117,6 +121,7 @@ export class PostListComponent implements OnInit {
             this.cdr.detectChanges(); // because this component has OnPush ChangeDetectionStrategy, and the input reference is not modified...
           }
         } else {
+          this.messagehandlingService.displayError("Erreur pendant le chargement de commentaires.");
           console.error("Error during PostListComponent:onLoadComments : no post found in the list with ID " + params.postId);
         }
       })

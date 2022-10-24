@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { catchError, take, tap } from 'rxjs';
 import { User } from 'src/app/core/models/user.model';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { MessageHandlingService } from 'src/app/core/services/message-handling.service';
 
 @Component({
   selector: 'app-login',
@@ -15,11 +16,10 @@ export class LoginComponent implements OnInit {
   emailCtrl!: FormControl;
   passwordCtrl!: FormControl;
   loading = false;
-
-  error!: string | null;
   
   constructor(private authService: AuthService,
-    private formBuilder: FormBuilder) { }
+              private messagehandlingService: MessageHandlingService,
+              private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.initMainForm();
@@ -46,11 +46,16 @@ export class LoginComponent implements OnInit {
       }),
       catchError(error => {
         this.loading = false;
-        if (error instanceof HttpErrorResponse && error.status === 401) {
-          this.error = "Wrong email / password";
-          console.log("Wrong email / password");
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 401) {
+            this.messagehandlingService.displayError("Erreur : utilisateur inconnu ou mot de passe invalide.");
+          } else if (error.status === 429) {
+            this.messagehandlingService.displayError("Erreur : mot de passe invalide. Veuillez attendre avant de réessayer."); // TODO retrieve retry-after
+          } else {
+            this.messagehandlingService.displayError("Erreur du serveur. Veuillez réessayer plus tard.");
+          }
         } else {
-          console.log('Caught in login CatchError. Throwing error');
+          this.messagehandlingService.displayError("Erreur pendant la connexion. Veuillez réessayer plus tard.");
         }
         throw error;
       })

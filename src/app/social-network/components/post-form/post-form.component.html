@@ -46,7 +46,5 @@
             </mat-card-actions>
         </div>
         <mat-spinner *ngIf="loading" color="primary" mode="indeterminate"></mat-spinner>
-        <p *ngIf="error" class="error-box">{{ error }}</p>
     </mat-card>
-    <p *ngIf="!isAddMode && error" class="error-box">{{ error }}</p>
 </div>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, Observable, ReplaySubject, take, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user.model';
+import { MessageHandlingService } from './message-handling.service';
 
 enum Role {
   User = "USER",
@@ -22,7 +23,8 @@ export class AuthService {
   currentRouteRequiringAuth: string = "";
   
   constructor(private handler: HttpBackend,
-              private router: Router) {
+              private router: Router,
+              private messagehandlingService: MessageHandlingService) {
     this.setUser(this.getUser()); // Retrieve and check the user (and save userId)
     // Create a new Http Client from HttpBackend, which dispatches requests directly to the backend, without going through the interceptor chain
     // So HTTP request done in this service won't be intercepted !
@@ -115,6 +117,7 @@ export class AuthService {
       }),
       catchError(error => {        
         this.resetAuthInfos();
+        this.messagehandlingService.displayError("L'utilisateur a dû être déconnecté : veuillez vous reconnecter.");
         if (error instanceof HttpErrorResponse) {
           const httpError = error.error;
           const errorMessage = (httpError != null && httpError.error != null && httpError.error.message != null) ? httpError.error.message : error.message;

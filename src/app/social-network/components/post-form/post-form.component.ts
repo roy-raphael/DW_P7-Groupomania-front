@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MonoTypeOperatorFunction } from 'rxjs';
 import { catchError, take, tap } from 'rxjs/operators';
 import { Post } from 'src/app/core/models/post.model';
+import { MessageHandlingService } from 'src/app/core/services/message-handling.service';
 import { PostsService } from 'src/app/core/services/posts.service';
 import { requiredFileType } from '../../validators/required-file-type.validator';
 
@@ -21,7 +22,7 @@ export class PostFormComponent implements OnInit {
   loadingPost: boolean = false;
   loading: boolean = false;
   isAddMode!: boolean;
-  error: string | null = null;
+  // error: string | null = null;
 
   mainForm!: FormGroup;
   textCtrl!: FormControl;
@@ -36,6 +37,7 @@ export class PostFormComponent implements OnInit {
   originalPostImageDeleted: boolean = false;
 
   constructor(private postsService: PostsService,
+              private messagehandlingService: MessageHandlingService,
               private router: Router,
               private _ngZone: NgZone,
               private route: ActivatedRoute,
@@ -201,11 +203,13 @@ export class PostFormComponent implements OnInit {
       this.mainForm.reset();
       this.setFile(null);
       this.newPost.emit(post);
+      this.messagehandlingService.displaySuccess("Publication créée avec succès.");
     });
   }
 
   processEditedPost(): MonoTypeOperatorFunction<Post> {
     return tap((post: Post) => {
+      this.messagehandlingService.displaySuccess("Publication éditée avec succès.");
       this.router.navigate(['..'], { relativeTo: this.route });
     });
   }
@@ -219,12 +223,12 @@ export class PostFormComponent implements OnInit {
   displayError(error: any): void {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 400) {
-        this.error = "Erreur dans la requête HTTP envoyée";
+        this.messagehandlingService.displayError("Erreur dans la requête HTTP envoyée. Veuillez réessayer plus tard.");
       } else {
-        this.error = "Erreur du serveur";
+        this.messagehandlingService.displayError("Erreur du serveur. Veuillez réessayer plus tard.");
       }
     } else {
-      this.error = "Erreur interne";
+      this.messagehandlingService.displayError("Erreur interne. Veuillez réessayer plus tard.");
     }
   }
 }

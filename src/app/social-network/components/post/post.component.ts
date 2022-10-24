@@ -3,6 +3,7 @@ import { Post } from 'src/app/core/models/post.model';
 import { EllipsisDirective } from 'ngx-ellipsis';
 import { Comment } from 'src/app/core/models/comment.model';
 import { Observable, Subscription } from 'rxjs';
+import { MessageHandlingService } from 'src/app/core/services/message-handling.service';
 
 @Component({
   selector: 'app-post',
@@ -31,7 +32,8 @@ export class PostComponent implements OnInit {
   commentsLoading: boolean = false;
   deleteLoading: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef,
+              private messagehandlingService: MessageHandlingService) {}
 
   ngOnInit(): void {
     if (this.post != null) {
@@ -53,7 +55,7 @@ export class PostComponent implements OnInit {
       if (postId === this.post.id) {
         this.deleteLoading = false;
         console.error("Error during Post Delete");
-        // TODO display error pop-up
+        this.messagehandlingService.displayError("Erreur : le post n'a pas pu être supprimé. Veuillez réessayer plus tard.");
         this.cdr.detectChanges(); // because parent also has OnPush ChangeDetectionStrategy
       }
     });

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { catchError, map, Observable, tap } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { MessageHandlingService } from 'src/app/core/services/message-handling.service';
 import { confirmEqualValidator } from '../../validators/confirm-equal.validator';
 import { patternValidator } from '../../validators/pattern.validator';
 import { sanityCheckValidator } from '../../validators/sanity-check.validator';
@@ -46,10 +47,9 @@ export class SignupComponent implements OnInit {
   showEmailError$!: Observable<boolean>;
   showPasswordError$!: Observable<boolean>;
 
-  error!: string | null;
-
   constructor(private formBuilder: FormBuilder,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private messagehandlingService: MessageHandlingService) { }
 
   ngOnInit(): void {
     this.initFormControls();
@@ -135,6 +135,7 @@ export class SignupComponent implements OnInit {
         this.loading = false;
         if (response) {
           this.resetForm();
+          this.messagehandlingService.displaySuccess("Compte créé avec succès. Veuillez vous connecter.");
           this.authService.redirectToLogin();
         }
       }),
@@ -142,12 +143,12 @@ export class SignupComponent implements OnInit {
         this.loading = false;
         if (error instanceof HttpErrorResponse) {
           if (error.status === 400) {
-            this.error = "Erreur dans la requête HTTP envoyée";
+            this.messagehandlingService.displayError("Erreur dans la requête HTTP envoyée. Veuillez réessayer plus tard.");
           } else {
-            this.error = "Erreur du serveur";
+            this.messagehandlingService.displayError("Erreur du serveur. Veuillez réessayer plus tard.");
           }
         } else {
-          this.error = "Erreur interne";
+          this.messagehandlingService.displayError("Erreur interne. Veuillez réessayer plus tard.");
         }
         throw error;
       })
