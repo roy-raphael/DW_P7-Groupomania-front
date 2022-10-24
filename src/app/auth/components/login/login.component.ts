@@ -6,6 +6,8 @@ import { User } from 'src/app/core/models/user.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MessageHandlingService } from 'src/app/core/services/message-handling.service';
 
+const EMAIL_REGEXP = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,7 +28,7 @@ export class LoginComponent implements OnInit {
   }
 
   private initMainForm(): void {
-    this.emailCtrl = this.formBuilder.control('', [Validators.required, Validators.email]);
+    this.emailCtrl = this.formBuilder.control('', [Validators.required, Validators.email, Validators.pattern(EMAIL_REGEXP)]);
     this.passwordCtrl = this.formBuilder.control('', Validators.required);
     this.mainForm = this.formBuilder.group({
       email: this.emailCtrl,

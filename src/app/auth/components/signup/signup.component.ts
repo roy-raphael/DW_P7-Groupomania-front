@@ -74,9 +74,8 @@ export class SignupComponent implements OnInit {
       lastName: this.lastNameCtrl,
       username: this.usernameCtrl
     });
-    this.emailCtrl = this.formBuilder.control('', [Validators.required, Validators.email,
-      Validators.pattern(EMAIL_REGEXP)]);
-    this.confirmEmailCtrl = this.formBuilder.control('', [Validators.required, Validators.email]);
+    this.emailCtrl = this.formBuilder.control('', [Validators.required, Validators.email, Validators.pattern(EMAIL_REGEXP)]);
+    this.confirmEmailCtrl = this.formBuilder.control('', [Validators.required, Validators.email, Validators.pattern(EMAIL_REGEXP)]);
     this.emailForm = this.formBuilder.group({
       email: this.emailCtrl,
       confirm: this.confirmEmailCtrl
