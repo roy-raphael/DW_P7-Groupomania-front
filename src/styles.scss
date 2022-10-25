@@ -38,11 +38,11 @@ body { margin: 0; font-family: Lato, "Helvetica Neue", sans-serif; }
         box-sizing: border-box;
         margin-inline: 10px;
     }
-}
 
-.large-card {
-    border-radius: 0;
-    @media #{$tablet-up} {
-        border-radius: var(--mat-focus-indicator-border-radius, 4px);
+    & .large-card, &.large-card {
+        border-radius: 0;
+        @media #{$tablet-up} {
+            border-radius: var(--mat-focus-indicator-border-radius, 4px);
+        }
     }
 }
