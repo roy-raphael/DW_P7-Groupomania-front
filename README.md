@@ -2,6 +2,18 @@
 Repository for the project 7 front-end of the OpenClassrooms Web Developer Path
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.3.
 
+## Summary
+There are 2 possible launching mode for the frontend :
+* HTTPS : more secure ; default mode
+* HTTP : unsecure ; the frontend should be launched using a specific command
+
+The frontend connects to a backend that can be in 2 possible modes :
+* HTTPS : more secure ; default mode
+* HTTP : unsecure ; the environment.ts file (in src/environments) should be updated
+
+## Prerequisite for a HTTP backend connection (not HTTPS backend)
+Update the environment.ts file (in src/environments) : replace `https` with `http`
+
 ## Prerequisites for HTTPS server
 
 ### Generate a self-signed certificate and its private key
@@ -51,9 +63,17 @@ IP.1 = 127.0.0.1
 * In the search box in the page, type or paste `security.enterprise_roots.enabled` and pause while the list is filtered
 * If the preference has a value of `false`, double-click it to set the value of `true`
 
+## Install
+
+Run `npm install`
+
 ## HTTPS Development server
 
-Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `npm start` for a HTTPS dev server. Navigate to `https://localhost:4200/`. The application will automatically reload if you change any of the source files.
+
+## HTTP Development server
+
+Run `npm run start:unsecure` for a HTTP dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
