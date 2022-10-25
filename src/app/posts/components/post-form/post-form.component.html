@@ -24,11 +24,11 @@
                 <div class="form-row">
                     <div class="file-upload">
                         <button *ngIf="!file && !originalPostImageUrl" [disabled]="loading" mat-mini-fab color="primary" class="upload-btn"
-                            (click)="fileUpload.click()">
+                            (click)="fileUpload.click()" aria-label="Joindre une image">
                             <mat-icon>attach_file</mat-icon>
                         </button>
                         <button *ngIf="file || originalPostImageUrl" [disabled]="loading" mat-mini-fab color="primary" class="cancel-btn"
-                            (click)="removeFile()">
+                            (click)="removeFile()" aria-label="Supprimer l'image de la publication">
                             <mat-icon>delete_forever</mat-icon>
                         </button>
                         <span class="file-text" [ngClass]="{ 'disabled-text': loading }">

@@ -1,10 +1,12 @@
 <nav class="toolbar">
     <mat-toolbar color="accent">
-        <button class="home-button" mat-icon-button color="primary" routerLink="">
+        <button class="home-button" mat-icon-button color="primary" routerLink="" aria-label="Aller à l'accueil">
             <mat-icon>home</mat-icon>
         </button>
         <h1>
-            <img src="../../../../assets/images/icon-left-font-monochrome-black.svg" class="logo" alt="Logo de Groupomania" routerLink="">
+            <a routerLink="" aria-label="Aller à l'accueil">
+                <img src="../../../../assets/images/icon-left-font-monochrome-black.svg" class="logo" alt="Logo de Groupomania">
+            </a>
         </h1>
         <div *ngIf="user$ | async as user; else disconnected" class="connection-menu">
             <span class="connected-user">({{ { firstName: user.firstName, lastName: user.surName, pseudo: user.pseudo } | username }})</span>

@@ -3,13 +3,13 @@
         <mat-form-field>
             <input type="text" matInput placeholder="Laissez un commentaire…" [formControl]="commentCtrl">
         </mat-form-field>
-        <button [disabled]="disabled" mat-icon-button color="primary" (click)="onLeaveComment()">
+        <button [disabled]="disabled" mat-icon-button color="primary" (click)="onLeaveComment()" aria-label="Envoyer le commentaire">
             <mat-icon>send</mat-icon>
         </button>
     </div>
     <div *ngIf="showComments">
         <mat-spinner *ngIf="loading"></mat-spinner>
-        <button [disabled]="disabled" class="load-more-button" *ngIf="!noMoreCommentToLoad && !loading" mat-flat-button color="accent" (click)="loadMore()" aria-label="Button to load more comments">Afficher plus ...</button>
+        <button [disabled]="disabled" class="load-more-button" *ngIf="!noMoreCommentToLoad && !loading" mat-flat-button color="accent" (click)="loadMore()" aria-label="Charger plus de commentaires">Afficher plus ...</button>
         <mat-list *ngIf="comments.length" @list>
             <mat-list-item *ngFor="let comment of comments; let i = index"
             [@listItem]="animationStates[i]"
