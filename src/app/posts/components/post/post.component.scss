@@ -29,7 +29,7 @@
     }
     
     .see-more-button, .see-less-button {
-        font-weight: 500;
+        font-weight: bold;
         &:hover {
             cursor: pointer;
             text-decoration: underline;
@@ -57,8 +57,8 @@
     
     .comments-button {
         padding: 0;
-        font-weight: 600;
-        color: mat.get-color-from-palette($groupomania-front-primary, default);
+        font-weight: bold;
+        color: mat.get-color-from-palette($groupomania-front-primary, darker);
     
         &:hover {
             text-decoration: underline;

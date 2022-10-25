@@ -17,10 +17,11 @@ body { margin: 0; font-family: Lato, "Helvetica Neue", sans-serif; }
 
 .error-snack-bar {
     background-color: mat.get-color-from-palette($groupomania-front-accent, default);
-    color: mat.get-color-from-palette($groupomania-front-primary, default);
+    color: mat.get-color-from-palette($groupomania-front-accent, default-contrast);
 
     & button {
-        color: mat.get-color-from-palette($groupomania-front-primary, default);
+        color: mat.get-color-from-palette($groupomania-front-accent, default-contrast);
+        font-weight: bold;
     }
 }
 

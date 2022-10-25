@@ -12,9 +12,13 @@
     margin-left: -10px;
 
     .mat-icon {
-        font-size: 35px;
+        font-size: 33px;
         height: 35px;
         width: 35px;
+        // outline the icon : (inside red, outside black)
+        -webkit-text-fill-color: mat.get-color-from-palette($groupomania-front-primary, default);
+        -webkit-text-stroke: 1px;
+        color:  mat.get-color-from-palette($groupomania-front-tertiary, default);
     }
 }
 
