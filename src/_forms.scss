@@ -22,7 +22,11 @@
     }
 
     .form-title {
-        margin-bottom: 25px;
+        margin-bottom: 10px;
+
+        h2 {
+            font-size: inherit;
+        }
     }
     
     .form-group {
