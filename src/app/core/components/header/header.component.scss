@@ -6,53 +6,57 @@
     position: sticky;
     top: 0; /* Sets the sticky toolbar to be on top */
     z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
-}
 
-.home-button {
-    margin-left: -10px;
-
-    .mat-icon {
-        font-size: 33px;
-        height: 35px;
-        width: 35px;
-        // outline the icon : (inside red, outside black)
-        -webkit-text-fill-color: mat.get-color-from-palette($groupomania-front-primary, default);
-        -webkit-text-stroke: 1px;
-        color:  mat.get-color-from-palette($groupomania-front-tertiary, default);
+    h1 {
+        height: 100%;
     }
-}
-
-.connection-menu {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.connected-user {
-    display: none;
-    @media #{$tablet-up} {
-        display: initial;
+    
+    .home-button {
+        margin-left: -10px;
+    
+        .mat-icon {
+            font-size: 33px;
+            height: 35px;
+            width: 35px;
+            // outline the icon : (inside red, outside black)
+            -webkit-text-fill-color: mat.get-color-from-palette($groupomania-front-primary, default);
+            -webkit-text-stroke: 1px;
+            color:  mat.get-color-from-palette($groupomania-front-tertiary, default);
+        }
     }
-}
-
-.connect-button {
-    color: mat.get-color-from-palette($groupomania-front-accent, default);
-    background-color: mat.get-color-from-palette($groupomania-front-tertiary, default);
-    font-weight: bold;
-
-    & mat-icon {
-        margin-left: 5px;
+    
+    .connection-menu {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
-
-    @media #{$tablet-down} {
-        padding-inline: 5px;
+    
+    .connected-user {
+        display: none;
+        @media #{$tablet-up} {
+            display: initial;
+        }
     }
-}
-
-.logo {
-    max-height: 100%;
-    padding: 15px 10px;
-    box-sizing: border-box;
-    cursor: pointer;
+    
+    .connect-button {
+        color: mat.get-color-from-palette($groupomania-front-accent, default);
+        background-color: mat.get-color-from-palette($groupomania-front-tertiary, default);
+        font-weight: bold;
+    
+        & mat-icon {
+            margin-left: 5px;
+        }
+    
+        @media #{$tablet-down} {
+            padding-inline: 5px;
+        }
+    }
+    
+    .logo {
+        max-height: 100%;
+        padding: 15px 10px;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
 }

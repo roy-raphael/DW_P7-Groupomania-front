@@ -1,19 +1,23 @@
-<mat-toolbar class="toolbar" color="accent">
-    <button class="home-button" mat-icon-button color="primary" routerLink="">
-        <mat-icon>home</mat-icon>
-    </button>
-    <img src="../../../../assets/images/icon-left-font-monochrome-black.svg" class="logo" alt="Logo de Groupomania" routerLink="">
-    <div *ngIf="user$ | async as user; else disconnected" class="connection-menu">
-        <span class="connected-user">({{ { firstName: user.firstName, lastName: user.surName, pseudo: user.pseudo } | username }})</span>
-        <button routerLink="/login" class="connect-button" mat-flat-button (click)="disconnect()">Se déconnecter
-            <mat-icon>account_circle</mat-icon>
+<nav class="toolbar">
+    <mat-toolbar color="accent">
+        <button class="home-button" mat-icon-button color="primary" routerLink="">
+            <mat-icon>home</mat-icon>
         </button>
-    </div>
-    <ng-template #disconnected>
-        <div class="connection-menu">
-            <button routerLink="/login" class="connect-button" mat-flat-button>Se connecter
-                <mat-icon>person</mat-icon>
+        <h1>
+            <img src="../../../../assets/images/icon-left-font-monochrome-black.svg" class="logo" alt="Logo de Groupomania" routerLink="">
+        </h1>
+        <div *ngIf="user$ | async as user; else disconnected" class="connection-menu">
+            <span class="connected-user">({{ { firstName: user.firstName, lastName: user.surName, pseudo: user.pseudo } | username }})</span>
+            <button routerLink="/login" class="connect-button" mat-flat-button (click)="disconnect()">Se déconnecter
+                <mat-icon>account_circle</mat-icon>
             </button>
         </div>
-    </ng-template>
-</mat-toolbar>
+        <ng-template #disconnected>
+            <div class="connection-menu">
+                <button routerLink="/login" class="connect-button" mat-flat-button>Se connecter
+                    <mat-icon>person</mat-icon>
+                </button>
+            </div>
+        </ng-template>
+    </mat-toolbar>
+</nav>
