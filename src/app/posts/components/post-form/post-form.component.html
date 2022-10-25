@@ -18,7 +18,8 @@
         </figure>
         <div class="form-actions">
             <div class="image-group">
-                <input class="file-input" type="file" [formControl]="imageCtrl" (input)="handleFileInputEventTarget($event.target)" #fileUpload>
+                <label for="file-selector" class="file-input">Choisir une image à joindre</label>
+                <input id="file-selector" class="file-input" type="file" [formControl]="imageCtrl" (input)="handleFileInputEventTarget($event.target)" #fileUpload>
                 <div class="form-row">
                     <div class="file-upload">
                         <button *ngIf="!file && !originalPostImageUrl" [disabled]="loading" mat-mini-fab color="primary" class="upload-btn"
