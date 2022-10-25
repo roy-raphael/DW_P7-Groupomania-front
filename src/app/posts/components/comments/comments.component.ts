@@ -13,29 +13,11 @@ import { Comment } from '../../../core/models/comment.model';
     trigger('list', [
       transition(':enter', [
         query('@listItem', [
-          stagger(50, [
-            animateChild()
-          ])
+          animateChild()
         ])
       ])
     ]),
     trigger('listItem', [
-      state('default', style({
-        transform: 'scale(1)',
-        'background-color': 'white',
-        'z-index': 1
-      })),
-      state('active', style({
-        transform: 'scale(1.05)',
-        'background-color': 'rgb(201, 157, 242)',
-        'z-index': 2
-      })),
-      transition('default => active', [
-        animate('100ms ease-in-out')
-      ]),
-      transition('active => default', [
-        animate('500ms ease-in-out')
-      ]),
       transition(':enter', [
         query('.comment-text, .comment-date', [
           style({
