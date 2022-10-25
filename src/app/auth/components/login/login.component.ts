@@ -45,6 +45,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmitForm() {
+    if (!this.mainForm.valid) {
+      this.mainForm.markAllAsTouched();
+      this.messagehandlingService.displayError("Erreur lors de la tentative de connexion : les champs ne sont pas tous valides. Veuillez corriger le(s) champ(s) erroné(s).");
+      return;
+    }
     this.loading = true;
     this.authService.login(this.emailCtrl.value, this.passwordCtrl.value).pipe(
       take(1),

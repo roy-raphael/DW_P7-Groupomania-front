@@ -1,9 +1,9 @@
 <div class="comments-component">
     <div class="comments-row">
         <mat-form-field>
-            <input type="text" matInput placeholder="Laissez un commentaire…" [formControl]="commentCtrl">
+            <input type="text" matInput placeholder="Laissez un commentaire…" [formControl]="commentCtrl" (keydown.enter)="onLeaveComment()">
         </mat-form-field>
-        <button [disabled]="disabled" mat-icon-button color="primary" (click)="onLeaveComment()" aria-label="Envoyer le commentaire">
+        <button [disabled]="disabled" [attr.aria-disabled]="!commentCtrl.value" mat-icon-button color="primary" (click)="onLeaveComment()" aria-label="Envoyer le commentaire" [ngClass]="{ 'disabled-button': !commentCtrl.value }">
             <mat-icon>send</mat-icon>
         </button>
     </div>

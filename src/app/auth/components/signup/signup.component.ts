@@ -128,6 +128,11 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmitForm() {
+    if (!this.mainForm.valid) {
+      this.mainForm.markAllAsTouched();
+      this.messagehandlingService.displayError("Erreur lors de la tentative d'inscription : les champs ne sont pas tous valides. Veuillez corriger le(s) champ(s) erroné(s).");
+      return;
+    }
     this.loading = true;
     this.authService.signup(this.emailCtrl.value, this.passwordCtrl.value, this.firstNameCtrl.value, this.lastNameCtrl.value, this.usernameCtrl.value).pipe(
       tap((response: {message: string}) => {

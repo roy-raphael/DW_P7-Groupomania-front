@@ -59,14 +59,14 @@ export class CommentsComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.commentCtrl = this.formBuilder.control('', [Validators.required])
+    this.commentCtrl = this.formBuilder.control('')
     for (let index in this.comments) {
       this.animationStates[index] = 'default';
     }
   }
 
   onLeaveComment() {
-    if (this.commentCtrl.invalid) {
+    if (!this.commentCtrl.value || this.commentCtrl.invalid) {
       return;
     }
     this.newComment.emit(this.commentCtrl.value);

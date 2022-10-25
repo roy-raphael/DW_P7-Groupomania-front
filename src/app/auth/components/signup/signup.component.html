@@ -48,7 +48,7 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label>Confirmer votre mot de passe</mat-label>
-                        <input [type]="showConfirmPassword ? 'text' : 'password'" matInput formControlName="confirmPassword">
+                        <input [type]="showConfirmPassword ? 'text' : 'password'" matInput formControlName="confirmPassword" (keydown.enter)="onSubmitForm()">
                         <mat-icon matSuffix (click)="toggleConfirmPasswordVisibility()">{{showConfirmPassword?'visibility_off':'visibility'}}</mat-icon>
                         <mat-error>Ce champ est requis</mat-error>
                     </mat-form-field>
@@ -56,7 +56,7 @@
                 <p class="error-text" *ngIf="showPasswordError$ | async">Les deux mots de passe ne correspondent pas</p>
             </div>
             <mat-card-actions>
-                <button [disabled]="!mainForm.valid" mat-flat-button color="primary" (click)="onSubmitForm()">S'inscrire</button>
+                <button [attr.aria-disabled]="!mainForm.valid" mat-flat-button color="primary" (click)="onSubmitForm()" [ngClass]="{ 'disabled-button': !mainForm.valid }">S'inscrire</button>
             </mat-card-actions>
             <mat-spinner *ngIf="loading" color="primary" mode="indeterminate"></mat-spinner>
         </mat-card>

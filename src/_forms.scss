@@ -47,6 +47,10 @@
     mat-card-actions {
         text-align: center;
     }
+
+    .disabled-button {
+        opacity: 35%;
+    }
     
     .loading {
         position: absolute;
