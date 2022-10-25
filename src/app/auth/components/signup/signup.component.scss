@@ -1,38 +1,29 @@
 @use '@angular/material' as mat;
 @import "src/_material-theme.scss";
 @import "src/_forms.scss";
+@import "src/_breakpoints.scss";
 
-// TODO styles for desktop : if screen size is big only !
 .signup-wrapper {
     .mat-card-container {
-        max-width: 1000px;
+        max-width: 500px;
     }
 
-    mat-form-field {
-        width: 48%;
-    }
+    @media #{$tablet-up} {
+        .mat-card-container {
+            max-width: 1000px;
+        }
     
-    .form-row {
-        flex-direction: row;
-    }
-
-    .error-text {
-        color: mat.get-color-from-palette($groupomania-front-warn, default);
-        margin-bottom: 20px;
+        mat-form-field {
+            width: 48%;
+        }
+        
+        .form-row {
+            flex-direction: row;
+        }
+    
+        .error-text {
+            color: mat.get-color-from-palette($groupomania-front-warn, default);
+            margin-bottom: 20px;
+        }
     }
 }
-
-// TODO styles for mobile : default
-// .signup-wrapper {
-//     .mat-card-container {
-//         max-width: 500px;
-//     }
-    
-//     mat-form-field { // already set as default
-//         width: 100%;
-//     }
-    
-//     .form-row { // already set as default
-//         flex-direction: column;
-//     }
-// }

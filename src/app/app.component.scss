@@ -1,0 +1,16 @@
+@use '@angular/material' as mat;
+@import "src/_material-theme.scss";
+
+:host {
+    height: auto;
+    display: inline-block;
+    width: 100%;
+    min-height: 100%;
+    background-color: mat.get-color-from-palette($groupomania-front-tertiary, default);
+}
+
+.main-content {
+    min-height: 100%;
+    max-width: 1440px;
+    margin: 10px auto;
+}

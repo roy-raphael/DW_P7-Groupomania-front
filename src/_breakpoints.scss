@@ -1,0 +1,8 @@
+// Breakpoints (for media queries)
+$phone-tablet-breakpoint: 768px;
+$tablet-desktop-breakpoint: 992px;
+$page-max-width: 1440px;
+$tablet-down: "screen and (max-width: #{$phone-tablet-breakpoint - 1})";
+$tablet-up: "screen and (min-width: #{$phone-tablet-breakpoint})";
+$desktop-up: "screen and (min-width: #{$tablet-desktop-breakpoint})";
+$big-desktop-up: "screen and (min-width: #{$page-max-width})";

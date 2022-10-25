@@ -1,4 +1,4 @@
-<mat-card class="post-card">
+<mat-card class="post-card generic-card large-card">
     <mat-spinner class="delete-loading-spinner" *ngIf="deleteLoading" color="primary" mode="indeterminate"></mat-spinner>
     <mat-card-header>
         <mat-card-title>
@@ -33,7 +33,7 @@
         <span class="see-more-button" *ngIf="seeMoreButton" (click)="showComplete()">Voir plus</span>
         <span class="see-less-button" *ngIf="seeMore" (click)="showTruncated()">Voir moins</span>
     </mat-card-content>
-    <mat-card-actions>
+    <mat-card-actions class="card-actions">
         <div class="actions-bar">
             <button [disabled]="deleteLoading" class="comments-button" mat-flat-button *ngIf="post._count.comments ? (post._count.comments !== 0) : false" (click)="hideOrShowComments()">
                 {{(post._count.comments > 1) ? (post._count.comments + " commentaires ") : "1 commentaire "}}

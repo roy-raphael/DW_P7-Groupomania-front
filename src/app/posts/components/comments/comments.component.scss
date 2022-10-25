@@ -1,13 +1,11 @@
 .comments-row {
     display: flex;
-    border-top: thin solid #555;
-    padding-top: 10px;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
   
 mat-form-field {
-    width: 90%;
+    width: 100%;
 }
 
 .comments-component mat-list-item {

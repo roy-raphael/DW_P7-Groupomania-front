@@ -1,0 +1,34 @@
+@use '@angular/material' as mat;
+@import "src/_material-theme.scss";
+@import "src/_breakpoints.scss";
+
+:host {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.page-404-card {
+    max-width: $phone-tablet-breakpoint;
+    width: 100%;
+    padding-block: 30px;
+    text-align: center;
+
+    .page-404-title {
+        font-size: 70px;
+        line-height: 70px;
+        padding-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .page-404-subtitle {
+        font-size: 40px;
+        line-height: 40px;
+        padding-bottom: 20px;
+    }
+
+    .go-home-button {
+        margin-top: 20px;
+        background-color: mat.get-color-from-palette($groupomania-front-accent, default);
+    }
+}

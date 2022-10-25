@@ -1,5 +1,7 @@
 @use '@angular/material' as mat;
 @import "src/_material-theme.scss";
+@import "src/_breakpoints.scss";
+
 .toolbar {
     position: sticky;
     top: 0; /* Sets the sticky toolbar to be on top */
@@ -8,6 +10,12 @@
 
 .home-button {
     margin-left: -10px;
+
+    .mat-icon {
+        font-size: 35px;
+        height: 35px;
+        width: 35px;
+    }
 }
 
 .connection-menu {
@@ -17,11 +25,30 @@
     gap: 10px;
 }
 
+.connected-user {
+    display: none;
+    @media #{$tablet-up} {
+        display: initial;
+    }
+}
+
 .connect-button {
     color: mat.get-color-from-palette($groupomania-front-accent, default);
     background-color: mat.get-color-from-palette($groupomania-front-tertiary, default);
+    font-weight: bold;
 
     & mat-icon {
         margin-left: 5px;
     }
+
+    @media #{$tablet-down} {
+        padding-inline: 5px;
+    }
+}
+
+.logo {
+    max-height: 100%;
+    padding: 15px 10px;
+    box-sizing: border-box;
+    cursor: pointer;
 }

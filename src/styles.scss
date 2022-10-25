@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @import "_material-theme.scss";
+@import "src/_breakpoints.scss";
 
 $success-text-color: #015B40;
 $success-background-color: #d7ffd7;
@@ -29,5 +30,19 @@ body { margin: 0; font-family: Lato, "Helvetica Neue", sans-serif; }
 
     & button {
         color: $success-text-color;
+    }
+}
+
+.generic-card {
+    @media #{$tablet-up} {
+        box-sizing: border-box;
+        margin-inline: 10px;
+    }
+}
+
+.large-card {
+    border-radius: 0;
+    @media #{$tablet-up} {
+        border-radius: var(--mat-focus-indicator-border-radius, 4px);
     }
 }

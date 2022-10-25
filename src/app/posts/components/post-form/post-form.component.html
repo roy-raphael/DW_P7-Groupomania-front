@@ -1,6 +1,6 @@
-<div class="post-form-wrapper form">
+<div class="post-form-wrapper form generic-card">
     <mat-spinner *ngIf="loadingPost" color="primary" mode="indeterminate"></mat-spinner>
-    <mat-card *ngIf="isAddMode || !loadingPost" [formGroup]="mainForm" class="main-form" [ngClass]="{ 'no-margin-top': isAddMode }">
+    <mat-card *ngIf="isAddMode || !loadingPost" [formGroup]="mainForm" class="main-form large-card">
         <div class="form-row">
             <mat-form-field appearance="fill">
                 <mat-label>Que voulez-vous publier ?</mat-label>

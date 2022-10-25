@@ -52,7 +52,8 @@
             "styles": [
               "src/styles.scss",
               "src/_material-theme.scss",
-              "src/_forms.scss"
+              "src/_forms.scss",
+              "src/_breakpoints.scss"
             ],
             "scripts": []
           },
@@ -122,7 +123,8 @@
             "styles": [
               "src/styles.scss",
               "src/_material-theme.scss",
-              "src/_forms.scss"
+              "src/_forms.scss",
+              "src/_breakpoints.scss"
             ],
             "scripts": []
           }

@@ -3,10 +3,6 @@
 @import "src/_forms.scss";
 
 .post-form-wrapper {
-    .no-margin-top {
-        margin-top: 0px;
-    }
-
     figure {
         display: flex;
         flex-direction: column;

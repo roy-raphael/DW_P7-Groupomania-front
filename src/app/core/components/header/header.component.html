@@ -2,18 +2,18 @@
     <button class="home-button" mat-icon-button color="primary" routerLink="">
         <mat-icon>home</mat-icon>
     </button>
-    <span>Groupomania</span>
-    <div class="connection-menu">
-        <div *ngIf="user$ | async as user; else disconnected" class="connection-menu">
-            <span>({{ { firstName: user.firstName, lastName: user.surName, pseudo: user.pseudo } | username }})</span>
-            <button routerLink="/login" class="connect-button" mat-flat-button (click)="disconnect()">Se déconnecter
-                <mat-icon>account_circle</mat-icon>
-            </button>
-        </div>
-        <ng-template #disconnected class="connection-menu">
+    <img src="../../../../assets/images/icon-left-font-monochrome-black.svg" class="logo" alt="Logo de Groupomania" routerLink="">
+    <div *ngIf="user$ | async as user; else disconnected" class="connection-menu">
+        <span class="connected-user">({{ { firstName: user.firstName, lastName: user.surName, pseudo: user.pseudo } | username }})</span>
+        <button routerLink="/login" class="connect-button" mat-flat-button (click)="disconnect()">Se déconnecter
+            <mat-icon>account_circle</mat-icon>
+        </button>
+    </div>
+    <ng-template #disconnected>
+        <div class="connection-menu">
             <button routerLink="/login" class="connect-button" mat-flat-button>Se connecter
                 <mat-icon>person</mat-icon>
             </button>
-        </ng-template>
-    </div>
+        </div>
+    </ng-template>
 </mat-toolbar>

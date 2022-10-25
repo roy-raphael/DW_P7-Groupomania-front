@@ -1,5 +1,5 @@
 <app-post-form (newPost)="onNewPost($event)"></app-post-form>
-<div infinite-scroll [infiniteScrollDistance]="infiniteScrollDistance" (scrolled)="onScrollDown()">
+<div class="post-list" infinite-scroll [infiniteScrollDistance]="infiniteScrollDistance" (scrolled)="onScrollDown()">
     <app-post *ngFor="let post of postsList" [post]="post" [isUnitaryPost]="false"
         (postCommented)="onPostCommented($event)"
         (postLiked)="onPostLiked($event)"
