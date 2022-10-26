@@ -10,6 +10,8 @@ import { MessageHandlingService } from 'src/app/core/services/message-handling.s
 import { PostsService } from 'src/app/core/services/posts.service';
 import { requiredFileType } from '../../validators/required-file-type.validator';
 
+const ACCEPTED_FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 @Component({
   selector: 'app-post-form',
   templateUrl: './post-form.component.html',
@@ -22,7 +24,6 @@ export class PostFormComponent implements OnInit {
   loadingPost: boolean = false;
   loading: boolean = false;
   isAddMode!: boolean;
-  // error: string | null = null;
 
   mainForm!: FormGroup;
   textCtrl!: FormControl;
@@ -92,7 +93,7 @@ export class PostFormComponent implements OnInit {
 
   private initFormControls(): void {
     this.textCtrl = this.formBuilder.control('');
-    this.imageCtrl = this.formBuilder.control(null, [requiredFileType(['jpg', 'jpeg', 'heic', 'png'])]);
+    this.imageCtrl = this.formBuilder.control(null, [requiredFileType(ACCEPTED_FILE_TYPES)]);
     this.imageAltCtrl = this.formBuilder.control('');
   }
 
@@ -118,6 +119,8 @@ export class PostFormComponent implements OnInit {
           this.setFile(files.item(0));
         } else {
           this.imageCtrl.reset();
+          this.messagehandlingService.displayError(`Erreur lors de la sélection du fichier : l'extension n'est pas autorisée.
+          Veuillez réessayer avec un fichier dans une des extensions suivantes : ${ACCEPTED_FILE_TYPES.toString()}.`);
           console.log("Image control is invalid (during handleFileInputEventTarget) ; reseting it");
         }
       } else {
