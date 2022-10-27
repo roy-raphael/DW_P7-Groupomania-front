@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   emailCtrl!: FormControl;
   passwordCtrl!: FormControl;
   loading = false;
+  showPassword: boolean = false;
   
   constructor(private authService: AuthService,
               private messagehandlingService: MessageHandlingService,
@@ -65,6 +66,10 @@ export class LoginComponent implements OnInit {
         throw error;
       })
     ).subscribe();
+  }
+  
+  public togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   private displayLoginError(error: any) {

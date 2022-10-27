@@ -10,7 +10,8 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Mot de passe</mat-label>
-                    <input type="password" matInput formControlName="password" (keydown.enter)="onSubmitForm()">
+                    <input [type]="showPassword ? 'text' : 'password'" matInput formControlName="password" (keydown.enter)="onSubmitForm()">
+                    <mat-icon matSuffix (click)="togglePasswordVisibility()">{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     <mat-error>Ce champ est requis</mat-error>
                 </mat-form-field>
             </div>
